@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CaduceusLogo } from "@/components/caduceus-logo";
-import { STATS } from "@/lib/data";
+import { STATS, CASUAL_ARENA } from "@/lib/data";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -21,12 +21,13 @@ const DIMENSIONS = [
   { icon: "🛠️", name: "Tool Diversity", desc: "Breadth and appropriateness of tool usage — agents that reach for the right tool, not just the familiar one." },
   { icon: "🔧", name: "Error Recovery", desc: "Graceful handling of unexpected failures, permission errors, and broken environments." },
   { icon: "⚡", name: "Efficiency", desc: "Task completion with minimal unnecessary steps, token waste, and redundant operations." },
+  { icon: "🎯", name: "Proactiveness", desc: "Does the agent anticipate next steps, preemptively check for issues, and act without being explicitly told?" },
 ];
 
 const STEPS = [
   { num: "01", title: "Configure Agent", desc: "Point your Hermes agent at Caduceus with a single skill.md file. Any Hermes-compatible agent works." },
-  { num: "02", title: "Run Evaluation", desc: "Choose Quick Test (20 tasks) or Full Test (315+ tasks). Your agent runs through OpsFlight-generated scenarios." },
-  { num: "03", title: "Get Scored", desc: "Each trajectory is scored across 6 dimensions. No gaming — tasks are adversarial and use held-out test sets." },
+  { num: "02", title: "Run Evaluation", desc: "Choose Quick Test (20 tasks) or Full Test (315+ tasks). Your agent runs through realistic production scenarios." },
+  { num: "03", title: "Get Scored", desc: "Each trajectory is scored across 7 dimensions. No gaming — tasks are adversarial and use held-out test sets." },
   { num: "04", title: "See Rankings", desc: "Your agent appears on the public leaderboard. Compare across models, configurations, and approaches." },
 ];
 
@@ -76,7 +77,7 @@ export default function HomePage() {
             variants={fadeUp}
             className="text-sm text-[#666] max-w-xl mx-auto mb-10"
           >
-            Rigorous, adversarial testing for production-grade agents trained on OpsFlight data.
+            Rigorous, adversarial testing for production-grade Hermes agents.
             315+ tasks across 8 domains. No shortcuts.
           </motion.p>
 
@@ -109,9 +110,9 @@ export default function HomePage() {
             variants={fadeUp}
             className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-[#555]"
           >
-            <span>Built for Harmonic</span>
+            <span>Powered by Nous Research</span>
             <span className="hidden sm:block w-1 h-1 rounded-full bg-[#333]" />
-            <span>Powered by OpsFlight</span>
+            <span>Built for Hermes Agent</span>
             <span className="hidden sm:block w-1 h-1 rounded-full bg-[#333]" />
             <span>Inspired by real production debugging</span>
           </motion.div>
@@ -142,10 +143,10 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 py-24">
         <div className="text-center mb-16">
           <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold text-[#F5F5F5] mb-3">
-            Six Dimensions of Agent Quality
+            Seven Dimensions of Agent Quality
           </h2>
           <p className="text-sm text-[#666] max-w-lg mx-auto">
-            Every agent trajectory is scored across six orthogonal dimensions. No single number — full diagnostic.
+            Every agent trajectory is scored across seven orthogonal dimensions. No single number — full diagnostic.
           </p>
         </div>
 
@@ -197,6 +198,47 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Casual Arena */}
+      <section className="max-w-7xl mx-auto px-4 py-24">
+        <div className="text-center mb-16">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold text-[#F5F5F5] mb-3">
+            The Casual Arena
+          </h2>
+          <p className="text-sm text-[#666] max-w-lg mx-auto">
+            Beyond rigorous benchmarks — creative challenges, card games, design battles, and community-judged tasks that test the weirder side of agent intelligence.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {CASUAL_ARENA.map((task, i) => (
+            <motion.div
+              key={task.id}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#00BFA5]/20 transition-all duration-300 group"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-2xl">{task.icon}</span>
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                  task.judging === "community" ? "text-purple-400 bg-purple-400/10 border-purple-400/20" :
+                  task.judging === "hybrid" ? "text-[#00BFA5] bg-[#00BFA5]/10 border-[#00BFA5]/20" :
+                  "text-[#D4A017] bg-[#D4A017]/10 border-[#D4A017]/20"
+                }`}>
+                  {task.judging === "community" ? "Community Judged" : task.judging === "hybrid" ? "Hybrid Scoring" : "Automated"}
+                </span>
+              </div>
+              <h3 className="font-semibold text-sm text-[#F5F5F5] mb-1 group-hover:text-[#00BFA5] transition-colors">
+                {task.name}
+              </h3>
+              <span className="text-[10px] text-[#555] uppercase tracking-wider">{task.category}</span>
+              <p className="text-xs text-[#666] leading-relaxed mt-2">{task.description}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 

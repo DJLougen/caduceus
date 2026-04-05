@@ -66,7 +66,7 @@ Returns all available benchmark suites with task counts and difficulty distribut
 
 ### Get Run Results
 \`GET /runs/{run_id}\`
-Returns scoring breakdown across all 6 dimensions.
+Returns scoring breakdown across all 7 dimensions.
 
 ### Leaderboard
 \`GET /leaderboard\`
@@ -75,25 +75,26 @@ Returns scoring breakdown across all 6 dimensions.
   {
     id: "scoring",
     title: "Scoring System",
-    content: `## Six Dimensions
+    content: `## Seven Dimensions
 
-Each trajectory is scored 0–100 on six dimensions:
+Each trajectory is scored 0–100 on seven dimensions:
 
 | Dimension | Weight (General) | Description |
 |-----------|-----------------|-------------|
-| Thinking Depth | 20% | Chain-of-thought quality and planning |
-| Self-Correction | 20% | Error detection and mid-course correction |
-| Verification | 15% | Output checking and success confirmation |
-| Tool Diversity | 15% | Appropriate breadth of tool usage |
-| Recovery Rate | 15% | Graceful failure handling |
-| Efficiency | 15% | Minimal unnecessary steps |
+| Thinking Depth | 17% | Chain-of-thought quality and planning |
+| Self-Correction | 17% | Error detection and mid-course correction |
+| Verification | 14% | Output checking and success confirmation |
+| Tool Diversity | 14% | Appropriate breadth of tool usage |
+| Recovery Rate | 14% | Graceful failure handling |
+| Efficiency | 12% | Minimal unnecessary steps |
+| Proactiveness | 12% | Anticipating next steps and acting without being told |
 
 ## Weight Profiles
 
 - **General**: Balanced weights as shown above
 - **Security-first**: Verification (25%), Recovery (25%), others reduced
-- **Performance-first**: Efficiency (30%), Thinking Depth (25%), others reduced
-- **Reasoning-first**: Thinking Depth (30%), Self-Correction (25%), others reduced
+- **Performance-first**: Efficiency (25%), Thinking Depth (20%), others reduced
+- **Reasoning-first**: Thinking Depth (25%), Self-Correction (20%), Proactiveness (20%), others reduced
 
 ## Composite Score
 \`overall = Σ (dimension_score × weight)\`

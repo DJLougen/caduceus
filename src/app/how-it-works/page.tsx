@@ -5,8 +5,8 @@ import Link from "next/link";
 
 const ARCHITECTURE = [
   {
-    title: "OpsFlight Simulator",
-    desc: "OpsFlight generates realistic production scenarios — broken deployments, security incidents, data pipeline failures — from real-world templates. Each scenario is a self-contained sandbox with files, services, and preconditions.",
+    title: "Scenario Generation",
+    desc: "Realistic production scenarios are generated — broken deployments, security incidents, data pipeline failures — from real-world templates. Each scenario is a self-contained sandbox with files, services, and preconditions.",
     color: "#D4A017",
   },
   {
@@ -16,7 +16,7 @@ const ARCHITECTURE = [
   },
   {
     title: "Caduceus Scoring Engine",
-    desc: "Each trajectory is evaluated across 6 orthogonal dimensions by a combination of automated validators and LLM-based judges. Scores are normalized per-task to account for difficulty.",
+    desc: "Each trajectory is evaluated across 7 orthogonal dimensions by a combination of automated validators and LLM-based judges. Scores are normalized per-task to account for difficulty.",
     color: "#D4A017",
   },
   {
@@ -32,7 +32,8 @@ const SCORING = [
   { dim: "Verification", weight: "15%", desc: "Whether the agent confirms success — reads outputs, checks results, validates fixes." },
   { dim: "Tool Diversity", weight: "15%", desc: "Appropriate breadth of tool usage rather than over-reliance on a single approach." },
   { dim: "Recovery Rate", weight: "15%", desc: "Graceful recovery from permission errors, missing files, failed commands." },
-  { dim: "Efficiency", weight: "15%", desc: "Completing tasks without unnecessary steps, redundant commands, or wasted tokens." },
+  { dim: "Efficiency", weight: "10%", desc: "Completing tasks without unnecessary steps, redundant commands, or wasted tokens." },
+  { dim: "Proactiveness", weight: "10%", desc: "Anticipating next steps, preemptively checking for issues, and acting without being explicitly told." },
 ];
 
 const ANTI_GAMING = [
@@ -42,6 +43,8 @@ const ANTI_GAMING = [
   "Full trajectory recording enables manual audit of any suspicious run",
   "Adversarial tasks designed to expose shortcut-taking behavior",
   "Separate synthetic and production task pools",
+  "Statistical normalization (z-scores, IQR scaling) across all metrics to fairly assess quality regardless of dimension scale or distribution",
+  "Parameter-count-aware scoring — results are contextualized by model size so a strong 36B agent gets appropriate credit vs. a 405B model",
 ];
 
 export default function HowItWorksPage() {
@@ -53,7 +56,7 @@ export default function HowItWorksPage() {
             How Caduceus Works
           </h1>
           <p className="text-sm text-[#666] max-w-2xl leading-relaxed mb-12">
-            Caduceus is built on top of the OpsFlight flight simulator for agent evaluation.
+            Caduceus is the native evaluation framework for Hermes Agent.
             Here&apos;s how the entire pipeline works, from scenario generation to leaderboard ranking.
           </p>
         </motion.div>

@@ -54,7 +54,7 @@ export function Footer() {
             Built by Daniel Lougen while pursuing PhD in visual neuroscience at UofT
           </p>
           <p className="text-xs text-[#555]">
-            &copy; {new Date().getFullYear()} Caduceus. Built for Harmonic. Powered by OpsFlight.
+            &copy; {new Date().getFullYear()} Caduceus. Powered by Nous Research.
           </p>
         </div>
       </div>

@@ -108,7 +108,7 @@ export default function SubmitPage() {
               <label className="block text-xs font-medium text-[#999] mb-1.5">Model / Framework</label>
               <input
                 type="text"
-                placeholder="e.g. Harmonic-OpsFlight-9B, Hermes 4 70B"
+                placeholder="e.g. Hermes 4 70B, Claude Sonnet 4.5"
                 className="w-full bg-[#111] border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm text-[#F5F5F5] placeholder:text-[#444] focus:outline-none focus:border-[#D4A017]/30 transition-colors"
               />
             </div>
@@ -146,7 +146,7 @@ export default function SubmitPage() {
         <div className="bg-[#111] border border-white/[0.06] rounded-xl p-6">
           <h3 className="text-sm font-semibold text-[#F5F5F5] mb-3">Compatible Agent Runners</h3>
           <div className="flex flex-wrap gap-2">
-            {["Hermes Agent", "Claude Code", "Codex", "OpenClaw"].map((r) => (
+            {["Hermes Agent", "Claude Code", "Codex", "OpenClaw", "Pi"].map((r) => (
               <span key={r} className="text-xs px-3 py-1.5 rounded-full bg-white/[0.04] text-[#888] border border-white/[0.06]">
                 {r}
               </span>

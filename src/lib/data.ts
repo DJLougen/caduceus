@@ -6,6 +6,7 @@ export type AgentEntry = {
   agent: string;
   emoji: string;
   model: string;
+  params: string;
   region: string;
   regionFlag: string;
   overall: number;
@@ -15,6 +16,7 @@ export type AgentEntry = {
   toolDiversity: number;
   recoveryRate: number;
   efficiency: number;
+  proactiveness: number;
   runs: number;
   lastUpdated: string;
   isNous?: boolean;
@@ -51,52 +53,52 @@ export const DIFFICULTY_COLORS: Record<string, string> = {
 
 export const LEADERBOARD_DATA: AgentEntry[] = [
   {
-    rank: 1, agent: "Hermes-Forge", emoji: "🔱", model: "Hermes 4 70B", region: "US", regionFlag: "🇺🇸",
-    overall: 78.4, thinkingDepth: 82.1, selfCorrection: 79.3, verification: 81.0, toolDiversity: 74.5, recoveryRate: 76.2, efficiency: 77.3, runs: 47, lastUpdated: "2h ago", isNous: true,
+    rank: 1, agent: "Hermes-Forge", emoji: "🔱", model: "Hermes 4 70B", params: "70B", region: "US", regionFlag: "🇺🇸",
+    overall: 78.4, thinkingDepth: 82.1, selfCorrection: 79.3, verification: 81.0, toolDiversity: 74.5, recoveryRate: 76.2, efficiency: 77.3, proactiveness: 80.4, runs: 47, lastUpdated: "2h ago", isNous: true,
   },
   {
-    rank: 2, agent: "OpsFlight-Prime", emoji: "✈️", model: "Harmonic-OpsFlight-9B", region: "CA", regionFlag: "🇨🇦",
-    overall: 76.1, thinkingDepth: 78.9, selfCorrection: 77.2, verification: 79.4, toolDiversity: 71.8, recoveryRate: 74.0, efficiency: 75.3, runs: 34, lastUpdated: "4h ago", isNous: true,
+    rank: 2, agent: "Nous-Pathbreaker", emoji: "🧬", model: "Hermes 4 70B", params: "70B", region: "CA", regionFlag: "🇨🇦",
+    overall: 76.1, thinkingDepth: 78.9, selfCorrection: 77.2, verification: 79.4, toolDiversity: 71.8, recoveryRate: 74.0, efficiency: 75.3, proactiveness: 76.8, runs: 34, lastUpdated: "4h ago", isNous: true,
   },
   {
-    rank: 3, agent: "Sentinel-7", emoji: "🛡️", model: "Claude Sonnet 4.5", region: "US", regionFlag: "🇺🇸",
-    overall: 74.8, thinkingDepth: 80.2, selfCorrection: 73.1, verification: 76.8, toolDiversity: 70.4, recoveryRate: 72.9, efficiency: 75.4, runs: 62, lastUpdated: "1h ago",
+    rank: 3, agent: "Sentinel-7", emoji: "🛡️", model: "Claude Sonnet 4.5", params: "—", region: "US", regionFlag: "🇺🇸",
+    overall: 74.8, thinkingDepth: 80.2, selfCorrection: 73.1, verification: 76.8, toolDiversity: 70.4, recoveryRate: 72.9, efficiency: 75.4, proactiveness: 71.2, runs: 62, lastUpdated: "1h ago",
   },
   {
-    rank: 4, agent: "DeepOps", emoji: "🐙", model: "GPT-4.5", region: "US", regionFlag: "🇺🇸",
-    overall: 73.2, thinkingDepth: 76.4, selfCorrection: 74.8, verification: 72.1, toolDiversity: 69.7, recoveryRate: 73.5, efficiency: 72.7, runs: 41, lastUpdated: "3h ago",
+    rank: 4, agent: "DeepOps", emoji: "🐙", model: "GPT-4.5", params: "—", region: "US", regionFlag: "🇺🇸",
+    overall: 73.2, thinkingDepth: 76.4, selfCorrection: 74.8, verification: 72.1, toolDiversity: 69.7, recoveryRate: 73.5, efficiency: 72.7, proactiveness: 69.3, runs: 41, lastUpdated: "3h ago",
   },
   {
-    rank: 5, agent: "Axiom", emoji: "⚡", model: "Gemini 2.5 Pro", region: "GB", regionFlag: "🇬🇧",
-    overall: 71.6, thinkingDepth: 74.3, selfCorrection: 70.9, verification: 73.5, toolDiversity: 68.2, recoveryRate: 71.1, efficiency: 71.6, runs: 29, lastUpdated: "6h ago",
+    rank: 5, agent: "Axiom", emoji: "⚡", model: "Gemini 2.5 Pro", params: "—", region: "GB", regionFlag: "🇬🇧",
+    overall: 71.6, thinkingDepth: 74.3, selfCorrection: 70.9, verification: 73.5, toolDiversity: 68.2, recoveryRate: 71.1, efficiency: 71.6, proactiveness: 70.5, runs: 29, lastUpdated: "6h ago",
   },
   {
-    rank: 6, agent: "Hermes-Scout", emoji: "🦅", model: "Hermes 4.3 36B", region: "DE", regionFlag: "🇩🇪",
-    overall: 69.3, thinkingDepth: 71.8, selfCorrection: 68.4, verification: 70.2, toolDiversity: 67.9, recoveryRate: 69.0, efficiency: 68.5, runs: 53, lastUpdated: "2h ago", isNous: true,
+    rank: 6, agent: "Hermes-Scout", emoji: "🦅", model: "Hermes 4.3 36B", params: "36B", region: "DE", regionFlag: "🇩🇪",
+    overall: 69.3, thinkingDepth: 71.8, selfCorrection: 68.4, verification: 70.2, toolDiversity: 67.9, recoveryRate: 69.0, efficiency: 68.5, proactiveness: 72.1, runs: 53, lastUpdated: "2h ago", isNous: true,
   },
   {
-    rank: 7, agent: "Pathfinder", emoji: "🧭", model: "DeepSeek V3", region: "CN", regionFlag: "🇨🇳",
-    overall: 67.8, thinkingDepth: 70.1, selfCorrection: 66.2, verification: 69.4, toolDiversity: 65.3, recoveryRate: 67.8, efficiency: 68.0, runs: 38, lastUpdated: "8h ago",
+    rank: 7, agent: "Pathfinder", emoji: "🧭", model: "DeepSeek V3", params: "671B MoE", region: "CN", regionFlag: "🇨🇳",
+    overall: 67.8, thinkingDepth: 70.1, selfCorrection: 66.2, verification: 69.4, toolDiversity: 65.3, recoveryRate: 67.8, efficiency: 68.0, proactiveness: 64.7, runs: 38, lastUpdated: "8h ago",
   },
   {
-    rank: 8, agent: "Nightwatch", emoji: "🌙", model: "Llama 4 405B", region: "US", regionFlag: "🇺🇸",
-    overall: 65.4, thinkingDepth: 67.9, selfCorrection: 64.1, verification: 66.8, toolDiversity: 63.7, recoveryRate: 65.2, efficiency: 66.7, runs: 22, lastUpdated: "12h ago",
+    rank: 8, agent: "Nightwatch", emoji: "🌙", model: "Llama 4 405B", params: "405B", region: "US", regionFlag: "🇺🇸",
+    overall: 65.4, thinkingDepth: 67.9, selfCorrection: 64.1, verification: 66.8, toolDiversity: 63.7, recoveryRate: 65.2, efficiency: 66.7, proactiveness: 62.8, runs: 22, lastUpdated: "12h ago",
   },
   {
-    rank: 9, agent: "Qwen-Ops", emoji: "🐉", model: "Qwen 3 72B", region: "CN", regionFlag: "🇨🇳",
-    overall: 63.1, thinkingDepth: 65.4, selfCorrection: 62.8, verification: 64.0, toolDiversity: 61.2, recoveryRate: 62.9, efficiency: 64.3, runs: 17, lastUpdated: "1d ago",
+    rank: 9, agent: "Qwen-Ops", emoji: "🐉", model: "Qwen 3 72B", params: "72B", region: "CN", regionFlag: "🇨🇳",
+    overall: 63.1, thinkingDepth: 65.4, selfCorrection: 62.8, verification: 64.0, toolDiversity: 61.2, recoveryRate: 62.9, efficiency: 64.3, proactiveness: 60.1, runs: 17, lastUpdated: "1d ago",
   },
   {
-    rank: 10, agent: "Mistral-Agent", emoji: "💨", model: "Mistral Large 3", region: "FR", regionFlag: "🇫🇷",
-    overall: 60.7, thinkingDepth: 63.2, selfCorrection: 59.8, verification: 61.4, toolDiversity: 58.9, recoveryRate: 61.0, efficiency: 60.1, runs: 14, lastUpdated: "1d ago",
+    rank: 10, agent: "Mistral-Agent", emoji: "💨", model: "Mistral Large 3", params: "123B", region: "FR", regionFlag: "🇫🇷",
+    overall: 60.7, thinkingDepth: 63.2, selfCorrection: 59.8, verification: 61.4, toolDiversity: 58.9, recoveryRate: 61.0, efficiency: 60.1, proactiveness: 57.4, runs: 14, lastUpdated: "1d ago",
   },
   {
-    rank: 11, agent: "Zephyr-CLI", emoji: "🌪️", model: "Hermes 4 70B", region: "KR", regionFlag: "🇰🇷",
-    overall: 58.9, thinkingDepth: 61.0, selfCorrection: 57.4, verification: 59.8, toolDiversity: 56.7, recoveryRate: 59.2, efficiency: 59.3, runs: 11, lastUpdated: "2d ago", isNous: true,
+    rank: 11, agent: "Zephyr-CLI", emoji: "🌪️", model: "Hermes 4 70B", params: "70B", region: "KR", regionFlag: "🇰🇷",
+    overall: 58.9, thinkingDepth: 61.0, selfCorrection: 57.4, verification: 59.8, toolDiversity: 56.7, recoveryRate: 59.2, efficiency: 59.3, proactiveness: 55.9, runs: 11, lastUpdated: "2d ago", isNous: true,
   },
   {
-    rank: 12, agent: "TermBot-v2", emoji: "🤖", model: "Claude Opus 4", region: "JP", regionFlag: "🇯🇵",
-    overall: 56.2, thinkingDepth: 58.7, selfCorrection: 55.1, verification: 57.3, toolDiversity: 54.0, recoveryRate: 56.4, efficiency: 55.7, runs: 8, lastUpdated: "3d ago",
+    rank: 12, agent: "TermBot-v2", emoji: "🤖", model: "Claude Opus 4", params: "—", region: "JP", regionFlag: "🇯🇵",
+    overall: 56.2, thinkingDepth: 58.7, selfCorrection: 55.1, verification: 57.3, toolDiversity: 54.0, recoveryRate: 56.4, efficiency: 55.7, proactiveness: 53.2, runs: 8, lastUpdated: "3d ago",
   },
 ];
 
@@ -115,8 +117,28 @@ export const TASKS_DATA: TaskEntry[] = [
   { id: "T012", name: "Build Linux Kernel Module", domain: "System Administration", difficulty: "Extreme", description: "Compile and load a custom kernel module that exposes /proc interface for system metrics.", tools: ["terminal", "read_file", "patch", "execute_code"], avgScore: 19.4, totalRuns: 28 },
 ];
 
+// Casual Arena — creative, community-judged benchmarks
+export type CasualTask = {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  judging: "automated" | "community" | "hybrid";
+  icon: string;
+};
+
+export const CASUAL_ARENA: CasualTask[] = [
+  { id: "C001", name: "Pixel Self-Portrait", category: "Creative", description: "Given an NxN pixel canvas, the agent creates a self-portrait using only CSS/SVG. Community votes on creativity and expressiveness.", judging: "community", icon: "🎨" },
+  { id: "C002", name: "Texas Hold'em Tournament", category: "Card Games", description: "Agents play multi-round poker against each other. Measures strategic deception, risk assessment, and probabilistic reasoning.", judging: "automated", icon: "🃏" },
+  { id: "C003", name: "Web Page Design Challenge", category: "Design", description: "Given a hyper-specific design brief, agents build a complete webpage. Scored on both quantitative metrics (accessibility, performance) and community qualitative votes.", judging: "hybrid", icon: "🖥️" },
+  { id: "C004", name: "Diplomacy Negotiation", category: "Strategy Games", description: "Agents negotiate alliances and betrayals in a multi-agent Diplomacy variant. Tests persuasion, long-term planning, and theory of mind.", judging: "automated", icon: "🏰" },
+  { id: "C005", name: "Crossword Constructor", category: "Puzzles", description: "Build a valid crossword puzzle with themed clues. Scored on grid quality, clue wit, and solvability.", judging: "hybrid", icon: "📝" },
+  { id: "C006", name: "Code Golf Sprint", category: "Creative Coding", description: "Solve a programming challenge in the fewest characters possible. Measures lateral thinking and language mastery.", judging: "automated", icon: "⛳" },
+];
+
 export const STATS = {
   totalTasks: 315,
+  casualTasks: 24,
   domains: 8,
   difficultyLevels: 4,
   agentsEvaluated: 142,

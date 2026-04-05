@@ -18,6 +18,7 @@ const SCORE_COLS: { key: SortKey; label: string; short: string }[] = [
   { key: "toolDiversity", label: "Tool Diversity", short: "TDV" },
   { key: "recoveryRate", label: "Recovery Rate", short: "REC" },
   { key: "efficiency", label: "Efficiency", short: "EFF" },
+  { key: "proactiveness", label: "Proactiveness", short: "PRO" },
 ];
 
 function ScoreCell({ value, isOverall = false }: { value: number; isOverall?: boolean }) {
@@ -240,7 +241,7 @@ export default function LeaderboardPage() {
                               </span>
                             )}
                           </div>
-                          <div className="text-xs text-[#555]">{agent.model}</div>
+                          <div className="text-xs text-[#555]">{agent.model} <span className="text-[#444]">· {agent.params}</span></div>
                         </div>
                       </div>
                     </td>

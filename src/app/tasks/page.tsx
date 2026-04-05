@@ -31,7 +31,7 @@ export default function TasksPage() {
             Task Catalog
           </h1>
           <p className="text-sm text-[#666]">
-            315+ tasks across 8 domains. Each task is generated from real OpsFlight production scenarios.
+            315+ tasks across 8 domains. Each task is derived from real production scenarios and adversarial conditions.
           </p>
         </motion.div>
       </div>
