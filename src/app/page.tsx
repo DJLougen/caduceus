@@ -1,65 +1,228 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { CaduceusLogo } from "@/components/caduceus-logo";
+import { STATS } from "@/lib/data";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
+  }),
+};
+
+const DIMENSIONS = [
+  { icon: "🧠", name: "Thinking Depth", desc: "How deeply the agent reasons before acting — chain-of-thought quality and planning horizon." },
+  { icon: "🔄", name: "Self-Correction", desc: "Ability to detect its own mistakes mid-trajectory and course-correct without external prompting." },
+  { icon: "✅", name: "Verification", desc: "Does the agent verify its work? Checks outputs, reads results, confirms success before declaring done." },
+  { icon: "🛠️", name: "Tool Diversity", desc: "Breadth and appropriateness of tool usage — agents that reach for the right tool, not just the familiar one." },
+  { icon: "🔧", name: "Error Recovery", desc: "Graceful handling of unexpected failures, permission errors, and broken environments." },
+  { icon: "⚡", name: "Efficiency", desc: "Task completion with minimal unnecessary steps, token waste, and redundant operations." },
+];
+
+const STEPS = [
+  { num: "01", title: "Configure Agent", desc: "Point your Hermes agent at Caduceus with a single skill.md file. Any Hermes-compatible agent works." },
+  { num: "02", title: "Run Evaluation", desc: "Choose Quick Test (20 tasks) or Full Test (315+ tasks). Your agent runs through OpsFlight-generated scenarios." },
+  { num: "03", title: "Get Scored", desc: "Each trajectory is scored across 6 dimensions. No gaming — tasks are adversarial and use held-out test sets." },
+  { num: "04", title: "See Rankings", desc: "Your agent appears on the public leaderboard. Compare across models, configurations, and approaches." },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      {/* Hero */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Background grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(212,160,23,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(212,160,23,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,160,23,0.06)_0%,transparent_70%)]" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center pt-24">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex justify-center mb-8"
+          >
+            <CaduceusLogo size={72} className="float" />
+          </motion.div>
+
+          <motion.h1
+            custom={1}
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#F5F5F5] mb-4"
+          >
+            Caduceus
+          </motion.h1>
+
+          <motion.p
+            custom={2}
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="text-lg sm:text-xl text-[#999] max-w-2xl mx-auto mb-4 leading-relaxed"
+          >
+            The Hermes Agent Evaluation Framework
+          </motion.p>
+
+          <motion.p
+            custom={3}
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="text-sm text-[#666] max-w-xl mx-auto mb-10"
+          >
+            Rigorous, adversarial testing for production-grade agents trained on OpsFlight data.
+            315+ tasks across 8 domains. No shortcuts.
+          </motion.p>
+
+          <motion.div
+            custom={4}
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          >
+            <Link
+              href="/leaderboard"
+              className="bg-[#D4A017] hover:bg-[#E8B52A] text-[#0A0A0A] font-semibold px-8 py-3 rounded-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(212,160,23,0.3)] text-sm"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              View Leaderboard
+            </Link>
+            <Link
+              href="/submit"
+              className="border border-[#00BFA5]/40 text-[#00BFA5] hover:bg-[#00BFA5]/10 font-semibold px-8 py-3 rounded-lg transition-all duration-200 text-sm"
             >
-              Learning
-            </a>{" "}
-            center.
+              Submit Your Agent
+            </Link>
+          </motion.div>
+
+          {/* Trust bar */}
+          <motion.div
+            custom={5}
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-[#555]"
+          >
+            <span>Built for Harmonic</span>
+            <span className="hidden sm:block w-1 h-1 rounded-full bg-[#333]" />
+            <span>Powered by OpsFlight</span>
+            <span className="hidden sm:block w-1 h-1 rounded-full bg-[#333]" />
+            <span>Inspired by real production debugging</span>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Live stats */}
+      <section className="border-y border-white/[0.06] bg-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6">
+          {[
+            { label: "Tasks", value: `${STATS.totalTasks}+` },
+            { label: "Domains", value: String(STATS.domains) },
+            { label: "Agents Evaluated", value: String(STATS.agentsEvaluated) },
+            { label: "Total Runs", value: STATS.totalRuns.toLocaleString() },
+            { label: "Trajectories", value: STATS.totalTrajectories.toLocaleString() },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-2xl font-bold font-[family-name:var(--font-heading)] text-[#D4A017]">
+                {stat.value}
+              </div>
+              <div className="text-xs text-[#666] mt-1">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Key Dimensions */}
+      <section className="max-w-7xl mx-auto px-4 py-24">
+        <div className="text-center mb-16">
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold text-[#F5F5F5] mb-3">
+            Six Dimensions of Agent Quality
+          </h2>
+          <p className="text-sm text-[#666] max-w-lg mx-auto">
+            Every agent trajectory is scored across six orthogonal dimensions. No single number — full diagnostic.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {DIMENSIONS.map((d, i) => (
+            <motion.div
+              key={d.name}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#D4A017]/20 transition-all duration-300 group"
+            >
+              <div className="text-2xl mb-3">{d.icon}</div>
+              <h3 className="font-semibold text-[#F5F5F5] mb-2 group-hover:text-[#D4A017] transition-colors">
+                {d.name}
+              </h3>
+              <p className="text-sm text-[#666] leading-relaxed">{d.desc}</p>
+            </motion.div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* How it works */}
+      <section className="border-t border-white/[0.06] bg-[#080808]">
+        <div className="max-w-5xl mx-auto px-4 py-24">
+          <div className="text-center mb-16">
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold text-[#F5F5F5] mb-3">
+              How Caduceus Works
+            </h2>
+            <p className="text-sm text-[#666]">Four steps from agent to leaderboard.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {STEPS.map((step, i) => (
+              <motion.div
+                key={step.num}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
+                className="relative"
+              >
+                <div className="text-[#D4A017]/20 font-[family-name:var(--font-heading)] text-5xl font-bold mb-3">
+                  {step.num}
+                </div>
+                <h3 className="font-semibold text-[#F5F5F5] mb-2">{step.title}</h3>
+                <p className="text-sm text-[#666] leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="max-w-7xl mx-auto px-4 py-24 text-center">
+        <h2 className="font-[family-name:var(--font-heading)] text-3xl font-bold text-[#F5F5F5] mb-4">
+          Ready to test your agent?
+        </h2>
+        <p className="text-sm text-[#666] mb-8 max-w-md mx-auto">
+          Submit your Hermes agent to the Caduceus evaluation suite and see where it ranks.
+        </p>
+        <div className="flex items-center justify-center gap-4">
+          <Link
+            href="/submit"
+            className="bg-[#D4A017] hover:bg-[#E8B52A] text-[#0A0A0A] font-semibold px-8 py-3 rounded-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(212,160,23,0.3)] text-sm"
+          >
+            Get Started
+          </Link>
+          <Link
+            href="/docs"
+            className="border border-white/10 text-[#999] hover:text-[#F5F5F5] hover:border-white/20 font-medium px-8 py-3 rounded-lg transition-all text-sm"
+          >
+            Read the Docs
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }
