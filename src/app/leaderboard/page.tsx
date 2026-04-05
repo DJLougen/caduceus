@@ -10,6 +10,8 @@ type SortDir = "asc" | "desc";
 const FILTERS = ["All", "Fine-tuned Only", "Base Only", "Quantized Only"] as const;
 const WEIGHT_PROFILES = ["General", "Security-first", "Performance-first", "Reasoning-first"] as const;
 const SIZE_FILTERS = ["All Sizes", "≤9B", "10–35B", "36–72B", "72B+"] as const;
+const MODALITY_FILTERS = ["All Types", "Language", "Vision-Language", "Code", "Multimodal"] as const;
+const SOURCE_FILTERS = ["All", "Open Source", "Closed Source"] as const;
 
 const WEIGHT_MAPS: Record<string, Record<string, number>> = {
   General:            { thinkingDepth: 0.17, selfCorrection: 0.17, verification: 0.14, toolDiversity: 0.14, recoveryRate: 0.14, efficiency: 0.12, proactiveness: 0.12 },
@@ -119,6 +121,10 @@ function AgentModal({ agent, onClose }: { agent: AgentEntry; onClose: () => void
           <span className="w-1 h-1 rounded-full bg-[#333]" />
           <span className="text-[#888]">{agent.fineTuned ? "Fine-tuned" : "Base model"}</span>
           <span className="w-1 h-1 rounded-full bg-[#333]" />
+          <span className="text-[#888]">{agent.modality}</span>
+          <span className="w-1 h-1 rounded-full bg-[#333]" />
+          <span className={agent.openSource ? "text-emerald-400/80" : "text-red-400/60"}>{agent.openSource ? "Open Source" : "Closed Source"}</span>
+          <span className="w-1 h-1 rounded-full bg-[#333]" />
           <QuantBadge q={agent.quantization} />
           <span className="w-1 h-1 rounded-full bg-[#333]" />
           <span className="text-[#888]">{agent.runs} runs</span>
@@ -152,6 +158,8 @@ export default function LeaderboardPage() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const [weightProfile, setWeightProfile] = useState<(typeof WEIGHT_PROFILES)[number]>("General");
   const [sizeFilter, setSizeFilter] = useState<(typeof SIZE_FILTERS)[number]>("All Sizes");
+  const [modalityFilter, setModalityFilter] = useState<(typeof MODALITY_FILTERS)[number]>("All Types");
+  const [sourceFilter, setSourceFilter] = useState<(typeof SOURCE_FILTERS)[number]>("All");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("overall");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -187,6 +195,13 @@ export default function LeaderboardPage() {
       });
     }
 
+    // Modality filter
+    if (modalityFilter !== "All Types") data = data.filter((a) => a.modality === modalityFilter);
+
+    // Open/Closed source filter
+    if (sourceFilter === "Open Source") data = data.filter((a) => a.openSource);
+    if (sourceFilter === "Closed Source") data = data.filter((a) => !a.openSource);
+
     // Search
     if (search) {
       const q = search.toLowerCase();
@@ -201,7 +216,7 @@ export default function LeaderboardPage() {
     });
 
     return data.map((entry, i) => ({ ...entry, rank: i + 1 }));
-  }, [search, sortKey, sortDir, filter, weightProfile, sizeFilter]);
+  }, [search, sortKey, sortDir, filter, weightProfile, sizeFilter, modalityFilter, sourceFilter]);
 
   const displayed = sorted.slice(0, pageSize);
 
@@ -257,6 +272,24 @@ export default function LeaderboardPage() {
             ))}
           </div>
 
+          {/* Modality filter */}
+          <div className="flex items-center gap-1 bg-[#111] border border-white/[0.06] rounded-lg p-1">
+            {MODALITY_FILTERS.map((m) => (
+              <button key={m} onClick={() => setModalityFilter(m)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${modalityFilter === m ? "bg-purple-500/20 text-purple-300" : "text-[#999] hover:text-[#F5F5F5] hover:bg-white/[0.04]"}`}
+              >{m}</button>
+            ))}
+          </div>
+
+          {/* Open/Closed source */}
+          <div className="flex items-center gap-1 bg-[#111] border border-white/[0.06] rounded-lg p-1">
+            {SOURCE_FILTERS.map((s) => (
+              <button key={s} onClick={() => setSourceFilter(s)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${sourceFilter === s ? "bg-emerald-500/20 text-emerald-300" : "text-[#999] hover:text-[#F5F5F5] hover:bg-white/[0.04]"}`}
+              >{s}</button>
+            ))}
+          </div>
+
           {/* Search */}
           <input type="text" placeholder="Search agents or models..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="bg-[#111] border border-white/[0.06] rounded-lg px-3 py-2 text-sm text-[#F5F5F5] placeholder:text-[#555] focus:outline-none focus:border-[#D4A017]/30 transition-colors w-full lg:max-w-xs" />
@@ -302,6 +335,8 @@ export default function LeaderboardPage() {
                             <span className="font-medium text-[#F5F5F5] text-sm">{agent.agent}</span>
                             {agent.isNous && <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-[#D4A017]/15 text-[#D4A017] border border-[#D4A017]/20 uppercase tracking-wider">Nous</span>}
                             {agent.fineTuned && <span className="text-[9px] px-1 py-0.5 rounded bg-purple-400/10 text-purple-400/70 border border-purple-400/15">FT</span>}
+                            {agent.modality !== "Language" && <span className={`text-[9px] px-1 py-0.5 rounded border ${agent.modality === "Vision-Language" ? "bg-sky-400/10 text-sky-400/70 border-sky-400/15" : agent.modality === "Code" ? "bg-emerald-400/10 text-emerald-400/70 border-emerald-400/15" : "bg-amber-400/10 text-amber-400/70 border-amber-400/15"}`}>{agent.modality === "Vision-Language" ? "VL" : agent.modality === "Code" ? "Code" : "MM"}</span>}
+                            {!agent.openSource && <span className="text-[9px] px-1 py-0.5 rounded bg-red-400/10 text-red-400/60 border border-red-400/15">Closed</span>}
                           </div>
                           <div className="text-xs text-[#555] flex items-center gap-1.5 flex-wrap">
                             <span className="truncate max-w-[150px]">{agent.model}</span>
