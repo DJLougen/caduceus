@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LEADERBOARD_DATA, type AgentEntry } from "@/lib/data";
+import { fetchLeaderboard } from "@/lib/api";
 
 type SortKey = keyof AgentEntry;
 type SortDir = "asc" | "desc";
@@ -154,7 +155,37 @@ function AgentModal({ agent, onClose }: { agent: AgentEntry; onClose: () => void
   );
 }
 
+function mapApiToAgent(row: Record<string, unknown>, rank: number): AgentEntry {
+  return {
+    rank,
+    agent: (row.display_name as string) || (row.name as string) || "Unknown",
+    emoji: (row.emoji as string) || "🤖",
+    model: row.model as string,
+    params: (row.params as string) || "—",
+    activeParams: row.active_params as string | undefined,
+    region: (row.region as string) || "",
+    regionFlag: (row.region_flag as string) || "🌍",
+    fineTuned: Boolean(row.fine_tuned),
+    openSource: Boolean(row.open_source),
+    modality: (row.modality as AgentEntry["modality"]) || "Language",
+    quantization: (row.quantization as AgentEntry["quantization"]) || "—",
+    overall: (row.best_score as number) || 0,
+    thinkingDepth: (row.thinking_depth as number) || 0,
+    selfCorrection: (row.self_correction as number) || 0,
+    verification: (row.verification as number) || 0,
+    toolDiversity: (row.tool_diversity as number) || 0,
+    recoveryRate: (row.recovery_rate as number) || 0,
+    efficiency: (row.efficiency as number) || 0,
+    proactiveness: (row.proactiveness as number) || 0,
+    runs: (row.completed_runs as number) || 0,
+    lastUpdated: row.last_completed_at ? new Date(row.last_completed_at as string).toLocaleString() : "—",
+    isNous: ((row.model as string) || "").toLowerCase().includes("hermes"),
+  };
+}
+
 export default function LeaderboardPage() {
+  const [liveData, setLiveData] = useState<AgentEntry[] | null>(null);
+  const [apiStatus, setApiStatus] = useState<"loading" | "live" | "offline">("loading");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const [weightProfile, setWeightProfile] = useState<(typeof WEIGHT_PROFILES)[number]>("General");
   const [sizeFilter, setSizeFilter] = useState<(typeof SIZE_FILTERS)[number]>("All Sizes");
@@ -166,13 +197,27 @@ export default function LeaderboardPage() {
   const [pageSize, setPageSize] = useState(50);
   const [selectedAgent, setSelectedAgent] = useState<AgentEntry | null>(null);
 
+  // Fetch live data from API, fallback to static
+  useEffect(() => {
+    fetchLeaderboard().then((rows) => {
+      if (rows && rows.length > 0) {
+        setLiveData(rows.map((r, i) => mapApiToAgent(r, i + 1)));
+        setApiStatus("live");
+      } else {
+        setApiStatus("offline");
+      }
+    });
+  }, []);
+
+  const baseData = liveData || LEADERBOARD_DATA;
+
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) setSortDir(sortDir === "desc" ? "asc" : "desc");
     else { setSortKey(key); setSortDir("desc"); }
   };
 
   const sorted = useMemo(() => {
-    let data = LEADERBOARD_DATA.map((a) => ({
+    let data = baseData.map((a) => ({
       ...a,
       overall: weightProfile === "General" ? a.overall : Math.round(computeWeighted(a, weightProfile) * 10) / 10,
     }));
@@ -216,7 +261,7 @@ export default function LeaderboardPage() {
     });
 
     return data.map((entry, i) => ({ ...entry, rank: i + 1 }));
-  }, [search, sortKey, sortDir, filter, weightProfile, sizeFilter, modalityFilter, sourceFilter]);
+  }, [baseData, search, sortKey, sortDir, filter, weightProfile, sizeFilter, modalityFilter, sourceFilter]);
 
   const displayed = sorted.slice(0, pageSize);
 
@@ -237,7 +282,9 @@ export default function LeaderboardPage() {
             <span className="w-1 h-1 rounded-full bg-[#333]" />
             <span>4 Difficulty Levels</span>
             <span className="w-1 h-1 rounded-full bg-[#333]" />
-            <span className="text-[#00BFA5]">{sorted.length} agents shown</span>
+            <span className={apiStatus === "live" ? "text-[#00BFA5]" : "text-[#666]"}>
+              {apiStatus === "live" ? "● Live" : apiStatus === "loading" ? "◌ Loading..." : "○ Static data"} · {sorted.length} agents
+            </span>
           </div>
         </motion.div>
       </div>

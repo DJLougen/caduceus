@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CaduceusLogo } from "@/components/caduceus-logo";
 import { STATS, CASUAL_ARENA } from "@/lib/data";
+import { fetchStats } from "@/lib/api";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -32,6 +34,24 @@ const STEPS = [
 ];
 
 export default function HomePage() {
+  const [stats, setStats] = useState(STATS);
+
+  useEffect(() => {
+    fetchStats().then((data) => {
+      if (data) {
+        setStats({
+          totalTasks: (data.total_tasks as number) || STATS.totalTasks,
+          casualTasks: STATS.casualTasks,
+          domains: (data.domains as number) || STATS.domains,
+          difficultyLevels: STATS.difficultyLevels,
+          agentsEvaluated: (data.agents_registered as number) || STATS.agentsEvaluated,
+          totalRuns: (data.total_runs as number) || STATS.totalRuns,
+          totalTrajectories: STATS.totalTrajectories,
+        });
+      }
+    });
+  }, []);
+
   return (
     <>
       {/* Hero */}
@@ -123,11 +143,11 @@ export default function HomePage() {
       <section className="border-y border-white/[0.06] bg-[#0A0A0A]">
         <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6">
           {[
-            { label: "Tasks", value: `${STATS.totalTasks}+` },
-            { label: "Domains", value: String(STATS.domains) },
-            { label: "Agents Evaluated", value: String(STATS.agentsEvaluated) },
-            { label: "Total Runs", value: STATS.totalRuns.toLocaleString() },
-            { label: "Trajectories", value: STATS.totalTrajectories.toLocaleString() },
+            { label: "Tasks", value: `${stats.totalTasks}+` },
+            { label: "Domains", value: String(stats.domains) },
+            { label: "Agents Evaluated", value: String(stats.agentsEvaluated) },
+            { label: "Total Runs", value: stats.totalRuns.toLocaleString() },
+            { label: "Trajectories", value: stats.totalTrajectories.toLocaleString() },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-2xl font-bold font-[family-name:var(--font-heading)] text-[#D4A017]">

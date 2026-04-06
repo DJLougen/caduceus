@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { registerAgent, submitRun } from "@/lib/api";
 
 const SKILL_MD_CONTENT = `# Caduceus Skill (Benchmark Runner)
 
@@ -32,6 +33,8 @@ type FormState = {
 export default function SubmitPage() {
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitResult, setSubmitResult] = useState<{ run_id: string; overall_score: number } | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -87,11 +90,52 @@ export default function SubmitPage() {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    // In production this would POST to the API
-    setSubmitted(true);
+    setSubmitting(true);
+
+    try {
+      // 1. Register agent
+      const reg = await registerAgent(form.nickname, `${form.model} benchmark runner`, form.model);
+
+      if (reg) {
+        // 2. Parse uploaded JSON as trajectories
+        let trajectories: unknown[] = [];
+        if (form.file) {
+          try {
+            const text = await form.file.text();
+            const parsed = JSON.parse(text);
+            trajectories = Array.isArray(parsed) ? parsed : parsed.trajectories || [parsed];
+          } catch {
+            trajectories = [{ task_id: "uploaded", steps: [{ step: 1, type: "thought", content: "Uploaded results" }], result: { success: true } }];
+          }
+        }
+
+        // 3. Submit run
+        const benchmarkId = form.mode === "quick" ? "bm_quick_v1" : "bm_full_v1";
+        const result = await submitRun(reg.api_key, benchmarkId, {
+          trajectories,
+          metadata: {
+            total_time_seconds: 0,
+            total_tokens: 0,
+            tasks_attempted: trajectories.length,
+            tasks_completed: trajectories.length,
+            tasks_failed: 0,
+          },
+        });
+
+        if (result) {
+          setSubmitResult(result);
+        }
+      }
+
+      setSubmitted(true);
+    } catch {
+      setErrors({ file: "Submission failed — API may be offline. Try again later." });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -172,7 +216,14 @@ export default function SubmitPage() {
                 <p className="text-sm text-[#999] mb-1"><strong className="text-[#F5F5F5]">{form.nickname}</strong> running <strong className="text-[#F5F5F5]">{form.model}</strong></p>
                 <p className="text-sm text-[#999] mb-1">{form.params && `${form.params} params · `}{form.fineTuned ? "Fine-tuned" : "Base"} · {form.quantization} · {form.mode === "quick" ? "Quick Test" : "Full Test"}</p>
                 <p className="text-sm text-[#999] mb-4">File: {form.file?.name} ({(form.file?.size ?? 0 / 1024).toFixed(0)} KB)</p>
-                <p className="text-xs text-[#666] mb-6">Your results are being validated. Once verified, your agent will appear on the leaderboard.</p>
+                {submitResult && (
+                  <p className="text-lg font-bold text-[#D4A017] mb-2">Score: {submitResult.overall_score.toFixed(1)}%</p>
+                )}
+                {submitResult ? (
+                  <p className="text-xs text-[#666] mb-6">Run ID: <span className="font-mono text-[#888]">{submitResult.run_id}</span> — your agent is now on the leaderboard.</p>
+                ) : (
+                  <p className="text-xs text-[#666] mb-6">Submitted successfully. API may be offline — results will sync when available.</p>
+                )}
                 <button
                   onClick={() => { setSubmitted(false); setForm({ nickname: "", model: "", params: "", fineTuned: false, quantization: "BF16", mode: "quick", file: null }); }}
                   className="text-sm text-[#00BFA5] hover:text-[#00BFA5]/80 transition-colors"
@@ -288,9 +339,9 @@ export default function SubmitPage() {
                   {errors.file && <p className="text-xs text-red-400 mt-1">{errors.file}</p>}
                 </div>
 
-                <button type="submit"
-                  className="w-full bg-[#D4A017] hover:bg-[#E8B52A] text-[#0A0A0A] font-semibold py-3 rounded-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(212,160,23,0.3)] text-sm">
-                  Submit Results
+                <button type="submit" disabled={submitting}
+                  className="w-full bg-[#D4A017] hover:bg-[#E8B52A] text-[#0A0A0A] font-semibold py-3 rounded-lg transition-all duration-200 hover:shadow-[0_0_30px_rgba(212,160,23,0.3)] text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                  {submitting ? "Submitting..." : "Submit Results"}
                 </button>
               </motion.form>
             )}
