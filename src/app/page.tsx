@@ -144,7 +144,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6">
           {[
             { label: "Tasks", value: `${stats.totalTasks}+` },
-            { label: "Domains", value: String(stats.domains) },
+            { label: "Task Domains", value: String(stats.domains) },
             { label: "Agents Evaluated", value: String(stats.agentsEvaluated) },
             { label: "Total Runs", value: stats.totalRuns.toLocaleString() },
             { label: "Trajectories", value: stats.totalTrajectories.toLocaleString() },
@@ -163,10 +163,10 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 py-24">
         <div className="text-center mb-16">
           <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold text-[#F5F5F5] mb-3">
-            Seven Dimensions of Agent Quality
+            How We Score
           </h2>
           <p className="text-sm text-[#666] max-w-lg mx-auto">
-            Every agent trajectory is scored across seven orthogonal dimensions. No single number — full diagnostic.
+            Every trajectory is evaluated on seven scoring dimensions. Not a single number — a full diagnostic of how your agent thinks, acts, and recovers.
           </p>
         </div>
 
