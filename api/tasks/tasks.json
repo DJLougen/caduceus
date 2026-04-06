@@ -1,0 +1,384 @@
+[
+  {
+    "id": "T001",
+    "name": "Debug Segfault in C++ Service",
+    "domain": "Software Engineering",
+    "difficulty": "Hard",
+    "description": "Identify and fix a use-after-free bug in a multi-threaded C++ microservice. The service crashes under concurrent requests after ~3 hours of uptime. The crash log shows a segfault in thread 3. You must find the root cause, apply a fix, and verify the service handles concurrent requests without crashing.",
+    "tools_available": ["terminal", "read_file", "patch", "process"],
+    "environment": {
+      "files": [
+        {"path": "/app/src/main.cpp", "description": "Main service file with thread pool and request handler"},
+        {"path": "/app/src/cache.h", "description": "Shared cache with the use-after-free bug"},
+        {"path": "/app/Makefile", "description": "Build configuration"},
+        {"path": "/app/logs/crash.log", "description": "Core dump analysis output"}
+      ],
+      "services": [
+        {"name": "app-server", "port": 8080, "status": "crashed"}
+      ],
+      "preconditions": [
+        "The service was running for 3 hours before crashing",
+        "The crash is reproducible with 10+ concurrent connections",
+        "GDB and valgrind are available"
+      ]
+    },
+    "success_criteria": [
+      "The use-after-free bug in cache.h is correctly identified",
+      "A fix is applied (mutex, shared_ptr, or ownership change)",
+      "The service compiles without warnings",
+      "The service runs under concurrent load for 60s without crashing"
+    ],
+    "par_steps": 14,
+    "time_limit_seconds": 600
+  },
+  {
+    "id": "T002",
+    "name": "Kubernetes Rolling Deployment",
+    "domain": "DevOps & Infrastructure",
+    "difficulty": "Medium",
+    "description": "Perform a zero-downtime rolling deployment of a 3-replica web service. The new image has a health check endpoint. You must update the deployment, ensure health checks pass, and verify zero dropped requests during the rollout. If the new version fails health checks, roll back.",
+    "tools_available": ["terminal", "read_file", "web_search"],
+    "environment": {
+      "files": [
+        {"path": "/k8s/deployment.yaml", "description": "Current deployment manifest"},
+        {"path": "/k8s/service.yaml", "description": "Service definition"},
+        {"path": "/app/health.py", "description": "Health check endpoint source"}
+      ],
+      "services": [
+        {"name": "k8s-cluster", "port": 6443, "status": "running"},
+        {"name": "web-service", "port": 80, "status": "running"}
+      ],
+      "preconditions": [
+        "kubectl is configured and connected to the cluster",
+        "Current deployment is v1.2.0 with 3 replicas",
+        "New image v1.3.0 is available in the registry"
+      ]
+    },
+    "success_criteria": [
+      "Deployment updated to v1.3.0",
+      "readinessProbe and livenessProbe configured",
+      "Zero dropped requests during rollout (verified by load test)",
+      "All 3 replicas running new version"
+    ],
+    "par_steps": 10,
+    "time_limit_seconds": 480
+  },
+  {
+    "id": "T003",
+    "name": "SQL Injection Audit",
+    "domain": "Security & Adversarial",
+    "difficulty": "Hard",
+    "description": "Audit a Flask web application for SQL injection vulnerabilities. The app has 6 routes, at least 4 of which contain injectable queries. Find all injection vectors, verify them with test payloads, and apply parameterized query fixes. Handle edge cases like dynamic table names.",
+    "tools_available": ["terminal", "read_file", "patch", "web_search"],
+    "environment": {
+      "files": [
+        {"path": "/app/routes.py", "description": "Flask route definitions with raw SQL"},
+        {"path": "/app/models.py", "description": "Database models with custom queries"},
+        {"path": "/app/admin.py", "description": "Admin panel with dynamic table access"},
+        {"path": "/app/tests/test_routes.py", "description": "Existing test suite"}
+      ],
+      "services": [
+        {"name": "flask-app", "port": 5000, "status": "running"},
+        {"name": "postgres", "port": 5432, "status": "running"}
+      ],
+      "preconditions": [
+        "The app is running with a seeded database",
+        "pytest is available for running the test suite",
+        "curl is available for manual testing"
+      ]
+    },
+    "success_criteria": [
+      "All 4+ injection vectors identified and documented",
+      "Each vector verified with a test payload",
+      "All queries converted to parameterized form",
+      "Dynamic table names use whitelist validation",
+      "All existing tests still pass"
+    ],
+    "par_steps": 16,
+    "time_limit_seconds": 600
+  },
+  {
+    "id": "T004",
+    "name": "Train FastText Classifier",
+    "domain": "Data Science & ML",
+    "difficulty": "Medium",
+    "description": "Train a text classification model on the provided dataset. The data has 5 categories with imbalanced classes. You must preprocess the text, train a FastText model, tune at least 2 hyperparameters, and report precision/recall/F1 per class. Target: macro F1 >= 0.75.",
+    "tools_available": ["terminal", "read_file", "execute_code"],
+    "environment": {
+      "files": [
+        {"path": "/data/train.csv", "description": "Training data (10K rows, 5 classes)"},
+        {"path": "/data/test.csv", "description": "Test data (2K rows)"},
+        {"path": "/scripts/baseline.py", "description": "Baseline training script"}
+      ],
+      "services": [],
+      "preconditions": [
+        "Python 3.11 with fasttext, pandas, sklearn installed",
+        "Data is pre-split into train/test",
+        "Classes are imbalanced (largest:smallest ratio ~8:1)"
+      ]
+    },
+    "success_criteria": [
+      "Text preprocessing applied (lowercasing, punctuation removal minimum)",
+      "FastText model trained with at least 2 hyperparameters tuned",
+      "Per-class precision/recall/F1 reported",
+      "Macro F1 >= 0.75 on test set"
+    ],
+    "par_steps": 12,
+    "time_limit_seconds": 480
+  },
+  {
+    "id": "T005",
+    "name": "Nginx Reverse Proxy Setup",
+    "domain": "System Administration",
+    "difficulty": "Easy",
+    "description": "Configure Nginx as a reverse proxy with SSL termination and rate limiting. The upstream service runs on port 3000. Use the provided self-signed certificate. Rate limit to 10 requests/second per IP.",
+    "tools_available": ["terminal", "read_file", "patch"],
+    "environment": {
+      "files": [
+        {"path": "/etc/nginx/nginx.conf", "description": "Default Nginx config"},
+        {"path": "/etc/ssl/server.crt", "description": "Self-signed SSL certificate"},
+        {"path": "/etc/ssl/server.key", "description": "SSL private key"}
+      ],
+      "services": [
+        {"name": "upstream-app", "port": 3000, "status": "running"},
+        {"name": "nginx", "port": 80, "status": "running"}
+      ],
+      "preconditions": [
+        "Nginx 1.24 installed",
+        "Upstream app responds on port 3000",
+        "SSL cert/key pair already generated"
+      ]
+    },
+    "success_criteria": [
+      "Nginx configured as reverse proxy to port 3000",
+      "SSL termination working (HTTPS on port 443)",
+      "Rate limiting active at 10 req/s per IP",
+      "nginx -t passes without errors"
+    ],
+    "par_steps": 8,
+    "time_limit_seconds": 300
+  },
+  {
+    "id": "T006",
+    "name": "REST API Authentication Flow",
+    "domain": "Web & API",
+    "difficulty": "Medium",
+    "description": "Implement JWT-based authentication with refresh tokens for a Node.js Express API. The existing codebase has user registration and a database. You must add login, token generation, refresh flow, and middleware that protects routes. Tokens expire in 15 minutes, refresh tokens in 7 days.",
+    "tools_available": ["terminal", "read_file", "patch", "web_extract"],
+    "environment": {
+      "files": [
+        {"path": "/app/src/server.js", "description": "Express server setup"},
+        {"path": "/app/src/routes/users.js", "description": "User registration routes"},
+        {"path": "/app/src/db.js", "description": "SQLite database wrapper"},
+        {"path": "/app/package.json", "description": "Dependencies (jsonwebtoken already listed)"}
+      ],
+      "services": [
+        {"name": "express-api", "port": 3000, "status": "running"}
+      ],
+      "preconditions": [
+        "Node.js 20 with npm installed",
+        "jsonwebtoken and bcrypt available",
+        "SQLite database with users table"
+      ]
+    },
+    "success_criteria": [
+      "POST /auth/login returns access_token and refresh_token",
+      "Access token expires in 15 minutes",
+      "POST /auth/refresh generates new tokens from refresh token",
+      "Protected routes return 401 without valid token",
+      "Refresh token stored securely (httpOnly cookie or DB)"
+    ],
+    "par_steps": 14,
+    "time_limit_seconds": 540
+  },
+  {
+    "id": "T007",
+    "name": "PostgreSQL Query Optimization",
+    "domain": "Database & Storage",
+    "difficulty": "Hard",
+    "description": "Optimize 5 slow queries on a PostgreSQL database with 2M rows. Use EXPLAIN ANALYZE to diagnose, add appropriate indexes, and rewrite queries where needed. Target: each query under 50ms (currently 500ms-5s).",
+    "tools_available": ["terminal", "read_file", "execute_code"],
+    "environment": {
+      "files": [
+        {"path": "/queries/slow_queries.sql", "description": "5 slow queries to optimize"},
+        {"path": "/schema/tables.sql", "description": "Current table definitions"},
+        {"path": "/schema/indexes.sql", "description": "Current indexes"}
+      ],
+      "services": [
+        {"name": "postgres", "port": 5432, "status": "running"}
+      ],
+      "preconditions": [
+        "PostgreSQL 16 with pg_stat_statements enabled",
+        "Database seeded with 2M rows across 4 tables",
+        "psql client available"
+      ]
+    },
+    "success_criteria": [
+      "All 5 queries analyzed with EXPLAIN ANALYZE (before/after)",
+      "Appropriate indexes added",
+      "Queries rewritten where beneficial",
+      "Each query completes in under 50ms",
+      "No full table scans in EXPLAIN output"
+    ],
+    "par_steps": 18,
+    "time_limit_seconds": 600
+  },
+  {
+    "id": "T008",
+    "name": "Multi-step Incident Response",
+    "domain": "Multi-step Reasoning",
+    "difficulty": "Extreme",
+    "description": "Triage a production incident affecting 3 interconnected services. Service A (API gateway) returns 502, Service B (user service) is OOMing, and Service C (database proxy) has connection pool exhaustion. The root cause is a single configuration change deployed 2 hours ago. Find it, fix it, verify all 3 services recover.",
+    "tools_available": ["terminal", "read_file", "patch", "process", "web_search"],
+    "environment": {
+      "files": [
+        {"path": "/var/log/service-a/error.log", "description": "API gateway error logs"},
+        {"path": "/var/log/service-b/error.log", "description": "User service OOM logs"},
+        {"path": "/var/log/service-c/error.log", "description": "DB proxy connection logs"},
+        {"path": "/deploy/changelog.txt", "description": "Recent deployment changes"},
+        {"path": "/etc/service-c/pgbouncer.ini", "description": "Connection pool config (the root cause is here)"}
+      ],
+      "services": [
+        {"name": "service-a", "port": 8080, "status": "degraded"},
+        {"name": "service-b", "port": 8081, "status": "restarting"},
+        {"name": "service-c", "port": 6432, "status": "overloaded"}
+      ],
+      "preconditions": [
+        "All 3 services were healthy until 2 hours ago",
+        "A config change was deployed to service-c at that time",
+        "The change reduced max_connections from 100 to 5 (typo)",
+        "This caused connection starvation → B OOM → A 502"
+      ]
+    },
+    "success_criteria": [
+      "Root cause identified: pgbouncer max_connections reduced to 5",
+      "Config reverted to max_connections = 100",
+      "Service C restarted and connection pool healthy",
+      "Service B recovered from OOM (no manual restart needed after C fixes)",
+      "Service A returning 200 on health check",
+      "Agent traced the causality chain: C config → B OOM → A 502"
+    ],
+    "par_steps": 24,
+    "time_limit_seconds": 900
+  },
+  {
+    "id": "T009",
+    "name": "Docker Compose Stack Debug",
+    "domain": "DevOps & Infrastructure",
+    "difficulty": "Easy",
+    "description": "Fix a broken docker-compose.yml that fails to start. There are 3 errors: a network misconfiguration, a volume mount pointing to a non-existent path, and a missing environment variable. Fix all 3 and get the stack running.",
+    "tools_available": ["terminal", "read_file", "patch"],
+    "environment": {
+      "files": [
+        {"path": "/app/docker-compose.yml", "description": "Broken compose file"},
+        {"path": "/app/.env.example", "description": "Example environment variables"},
+        {"path": "/app/Dockerfile", "description": "App Dockerfile"}
+      ],
+      "services": [],
+      "preconditions": [
+        "Docker and docker-compose installed",
+        "The stack has 3 services: web, db, redis",
+        "docker-compose up fails with 3 distinct errors"
+      ]
+    },
+    "success_criteria": [
+      "Network configuration fixed (bridge network defined)",
+      "Volume mount path corrected",
+      "Missing environment variable added",
+      "docker-compose up runs all 3 services successfully",
+      "docker-compose ps shows all healthy"
+    ],
+    "par_steps": 8,
+    "time_limit_seconds": 300
+  },
+  {
+    "id": "T010",
+    "name": "Encrypted Backup Recovery",
+    "domain": "Security & Adversarial",
+    "difficulty": "Extreme",
+    "description": "Recover data from a GPG-encrypted backup archive. The archive header is corrupted (first 16 bytes zeroed). You must repair the header, decrypt with the provided passphrase, extract the contents, and verify integrity via SHA256 checksums.",
+    "tools_available": ["terminal", "read_file", "execute_code"],
+    "environment": {
+      "files": [
+        {"path": "/backup/archive.gpg", "description": "Corrupted encrypted archive"},
+        {"path": "/backup/checksums.sha256", "description": "Expected checksums for recovered files"},
+        {"path": "/backup/gpg-header-reference.bin", "description": "Reference GPG header from a known-good archive"}
+      ],
+      "services": [],
+      "preconditions": [
+        "GPG 2.x installed with the decryption key in keyring",
+        "Passphrase: 'caduceus-recovery-2026'",
+        "The archive contains 5 files totaling ~2MB",
+        "xxd and hexdump available for binary editing"
+      ]
+    },
+    "success_criteria": [
+      "GPG header repaired using reference",
+      "Archive decrypted successfully",
+      "All 5 files extracted",
+      "SHA256 checksums match for all files"
+    ],
+    "par_steps": 12,
+    "time_limit_seconds": 600
+  },
+  {
+    "id": "T011",
+    "name": "Git Merge Conflict Resolution",
+    "domain": "Software Engineering",
+    "difficulty": "Easy",
+    "description": "Resolve merge conflicts across 4 files when merging feature/payments into main. Both branches modified the same functions. The feature branch adds payment processing; main has refactored the same code for performance. Both changes must be preserved.",
+    "tools_available": ["terminal", "read_file", "patch"],
+    "environment": {
+      "files": [
+        {"path": "/repo/src/api/orders.py", "description": "Order processing (conflicted)"},
+        {"path": "/repo/src/api/users.py", "description": "User model (conflicted)"},
+        {"path": "/repo/src/utils/validators.py", "description": "Input validation (conflicted)"},
+        {"path": "/repo/tests/test_orders.py", "description": "Test file (conflicted)"}
+      ],
+      "services": [],
+      "preconditions": [
+        "Git repo with merge in progress (MERGING state)",
+        "4 files have conflict markers",
+        "Both branches' changes are functionally correct individually"
+      ]
+    },
+    "success_criteria": [
+      "All conflict markers removed from all 4 files",
+      "Payment processing logic preserved from feature branch",
+      "Performance refactoring preserved from main",
+      "All tests pass after resolution",
+      "Merge committed successfully"
+    ],
+    "par_steps": 10,
+    "time_limit_seconds": 360
+  },
+  {
+    "id": "T012",
+    "name": "Build Linux Kernel Module",
+    "domain": "System Administration",
+    "difficulty": "Extreme",
+    "description": "Write, compile, and load a custom Linux kernel module that creates a /proc/sysmetrics interface. The interface should report CPU count, total RAM, uptime, and load average in JSON format when read.",
+    "tools_available": ["terminal", "read_file", "patch", "execute_code"],
+    "environment": {
+      "files": [
+        {"path": "/module/sysmetrics.c", "description": "Skeleton kernel module source"},
+        {"path": "/module/Makefile", "description": "Kernel module build file"}
+      ],
+      "services": [],
+      "preconditions": [
+        "Linux kernel headers installed for current kernel",
+        "GCC and make available",
+        "Running as root for insmod"
+      ]
+    },
+    "success_criteria": [
+      "Module compiles without errors or warnings",
+      "Module loads with insmod successfully",
+      "/proc/sysmetrics exists and is readable",
+      "Output is valid JSON with cpu_count, ram_total_mb, uptime_seconds, load_avg fields",
+      "Module unloads cleanly with rmmod"
+    ],
+    "par_steps": 14,
+    "time_limit_seconds": 600
+  }
+]

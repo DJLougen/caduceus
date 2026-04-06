@@ -40,6 +40,11 @@ yarn-error.log*
 CLAUDE.md
 AGENTS.md
 
+# api database
+api/*.db
+api/*.db-wal
+api/*.db-shm
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
