@@ -1,10 +1,14 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { CASUAL_ARENA } from "@/lib/data";
 
-export function ArenaDetail({ slug }: { slug: string }) {
+export function ArenaDetail({ slug: initialSlug }: { slug: string }) {
+  // useParams as fallback for client-side navigation (SPA redirect on GH Pages)
+  const routeParams = useParams<{ slug: string }>();
+  const slug = initialSlug || routeParams?.slug || "";
   const task = CASUAL_ARENA.find((t) => t.slug === slug);
 
   if (!task) {
