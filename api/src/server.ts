@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { v4 as uuid } from "uuid";
+import { readFileSync } from "fs";
+import { join } from "path";
 import db from "./db.js";
 
 const app = express();
@@ -8,6 +10,31 @@ app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 
 const PORT = process.env.PORT || 4000;
+
+// Load task definitions
+const tasksPath = join(process.cwd(), "api", "tasks", "tasks.json");
+let TASKS: Record<string, unknown>[] = [];
+try {
+  TASKS = JSON.parse(readFileSync(tasksPath, "utf-8"));
+  console.log(`Loaded ${TASKS.length} tasks`);
+} catch (e) {
+  console.error(`Failed to load tasks: ${e}`);
+}
+
+// --- Tasks routes ---
+app.get("/api/v1/tasks", (req: express.Request, res: express.Response) => {
+  const { domain, difficulty } = req.query;
+  let filtered = [...TASKS];
+  if (domain) filtered = filtered.filter((t) => t.domain === domain);
+  if (difficulty) filtered = filtered.filter((t) => t.difficulty === difficulty);
+  res.json(filtered);
+});
+
+app.get("/api/v1/tasks/:taskId", (req: express.Request, res: express.Response) => {
+  const task = TASKS.find((t) => t.id === req.params.taskId);
+  if (!task) return res.status(404).json({ error: "Task not found" });
+  res.json(task);
+});
 
 // --- Auth middleware ---
 function authenticate(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -235,6 +262,48 @@ app.get("/api/v1/benchmarks/:id/leaderboard", (req, res) => {
   `).all(req.params.id);
 
   res.json(rows);
+});
+
+// (Tasks routes registered at top of file)
+
+// ============================
+// TRACES (recent runs with trajectories)
+// ============================
+
+app.get("/api/v1/traces", (_req, res) => {
+  const rows = db.prepare(`
+    SELECT r.id, r.agent_id, r.benchmark_id, r.status, r.overall_score,
+      r.thinking_depth, r.self_correction, r.verification, r.tool_diversity,
+      r.recovery_rate, r.efficiency, r.proactiveness,
+      r.tasks_attempted, r.tasks_completed, r.total_time_seconds, r.total_tokens,
+      r.trajectories, r.completed_at,
+      a.display_name, a.emoji, a.model
+    FROM runs r
+    JOIN agents a ON a.id = r.agent_id
+    WHERE r.status = 'completed'
+    ORDER BY r.completed_at DESC
+    LIMIT 20
+  `).all();
+
+  res.json((rows as Record<string, unknown>[]).map((row) => ({
+    ...row,
+    trajectories: row.trajectories ? JSON.parse(row.trajectories as string) : [],
+  })));
+});
+
+app.get("/api/v1/traces/:runId", (req, res) => {
+  const row = db.prepare(`
+    SELECT r.*, a.display_name, a.emoji, a.model
+    FROM runs r
+    JOIN agents a ON a.id = r.agent_id
+    WHERE r.id = ?
+  `).get(req.params.runId) as Record<string, unknown> | undefined;
+
+  if (!row) return res.status(404).json({ error: "Run not found" });
+  res.json({
+    ...row,
+    trajectories: row.trajectories ? JSON.parse(row.trajectories as string) : [],
+  });
 });
 
 // ============================

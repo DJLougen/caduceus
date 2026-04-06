@@ -1,18 +1,41 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import { TASKS_DATA, DOMAINS, DIFFICULTY_COLORS } from "@/lib/data";
+import { TASKS_DATA, DOMAINS, DIFFICULTY_COLORS, type TaskEntry } from "@/lib/data";
+import { fetchTasks } from "@/lib/api";
 
 const DIFFICULTIES = ["All", "Easy", "Medium", "Hard", "Extreme"] as const;
 
+function mapApiTask(t: Record<string, unknown>): TaskEntry {
+  return {
+    id: t.id as string,
+    name: t.name as string,
+    domain: t.domain as string,
+    difficulty: t.difficulty as TaskEntry["difficulty"],
+    description: t.description as string,
+    tools: (t.tools_available as string[]) || [],
+    avgScore: (t.avg_score as number) || 0,
+    totalRuns: (t.total_runs as number) || 0,
+  };
+}
+
 export default function TasksPage() {
+  const [liveTasks, setLiveTasks] = useState<TaskEntry[] | null>(null);
   const [domainFilter, setDomainFilter] = useState("All");
   const [diffFilter, setDiffFilter] = useState<string>("All");
   const [search, setSearch] = useState("");
 
+  useEffect(() => {
+    fetchTasks().then((data) => {
+      if (data && data.length > 0) setLiveTasks(data.map(mapApiTask));
+    });
+  }, []);
+
+  const allTasks = liveTasks || TASKS_DATA;
+
   const filtered = useMemo(() => {
-    return TASKS_DATA.filter((t) => {
+    return allTasks.filter((t) => {
       if (domainFilter !== "All" && t.domain !== domainFilter) return false;
       if (diffFilter !== "All" && t.difficulty !== diffFilter) return false;
       if (search) {
@@ -21,7 +44,7 @@ export default function TasksPage() {
       }
       return true;
     });
-  }, [domainFilter, diffFilter, search]);
+  }, [allTasks, domainFilter, diffFilter, search]);
 
   return (
     <div className="min-h-screen pt-20">

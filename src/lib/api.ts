@@ -45,3 +45,15 @@ export async function submitRun(apiKey: string, benchmarkId: string, submission:
     body: JSON.stringify({ benchmark_id: benchmarkId, submission }),
   });
 }
+
+export async function fetchTasks(domain?: string, difficulty?: string) {
+  const params = new URLSearchParams();
+  if (domain) params.set("domain", domain);
+  if (difficulty) params.set("difficulty", difficulty);
+  const qs = params.toString();
+  return fetchApi<Record<string, unknown>[]>(`/api/v1/tasks${qs ? `?${qs}` : ""}`);
+}
+
+export async function fetchTraces() {
+  return fetchApi<Record<string, unknown>[]>("/api/v1/traces");
+}

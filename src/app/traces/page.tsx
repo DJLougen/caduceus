@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { fetchTraces } from "@/lib/api";
 
 type Step = {
   step: number;
@@ -97,8 +98,44 @@ const SAMPLE_TRACES: Trace[] = [
   },
 ];
 
+function mapApiTrace(row: Record<string, unknown>): Trace {
+  const trajs = (row.trajectories as Record<string, unknown>[]) || [];
+  const firstTraj = trajs[0] as Record<string, unknown> | undefined;
+  const steps: Step[] = firstTraj?.steps
+    ? (firstTraj.steps as Step[])
+    : [{ step: 1, type: "thought" as const, content: "Trajectory data available" }];
+
+  return {
+    id: row.id as string,
+    agent: (row.display_name as string) || "Unknown",
+    emoji: (row.emoji as string) || "🤖",
+    model: (row.model as string) || "Unknown",
+    task: (firstTraj?.task_id as string) || "—",
+    taskId: (firstTraj?.task_id as string) || "—",
+    domain: "—",
+    difficulty: "—",
+    score: (row.overall_score as number) || 0,
+    steps,
+    totalTime: `${Math.round(((row.total_time_seconds as number) || 0) / 60)}m ${((row.total_time_seconds as number) || 0) % 60}s`,
+    tokens: (row.total_tokens as number) || 0,
+    date: row.completed_at ? new Date(row.completed_at as string).toLocaleString() : "—",
+  };
+}
+
 export default function TracesPage() {
+  const [traces, setTraces] = useState<Trace[]>(SAMPLE_TRACES);
   const [expanded, setExpanded] = useState<string | null>(SAMPLE_TRACES[0].id);
+
+  useEffect(() => {
+    fetchTraces().then((data) => {
+      if (data && data.length > 0) {
+        const mapped = data.map(mapApiTrace);
+        // Merge: live traces first, then static samples
+        setTraces([...mapped, ...SAMPLE_TRACES]);
+        setExpanded(mapped[0].id);
+      }
+    });
+  }, []);
 
   return (
     <div className="min-h-screen pt-20">
@@ -113,7 +150,7 @@ export default function TracesPage() {
         </motion.div>
 
         <div className="space-y-4">
-          {SAMPLE_TRACES.map((trace) => {
+          {traces.map((trace) => {
             const isOpen = expanded === trace.id;
             const scoreColor = trace.score >= 75 ? "text-emerald-400" : trace.score >= 50 ? "text-[#D4A017]" : "text-orange-400";
 
