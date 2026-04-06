@@ -291,7 +291,7 @@ export default function LeaderboardPage() {
 
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 pb-4">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 flex-wrap">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 flex-wrap overflow-x-auto pb-2">
           {/* Fine-tune / base / quant */}
           <div className="flex items-center gap-1 bg-[#111] border border-white/[0.06] rounded-lg p-1">
             {FILTERS.map((f) => (

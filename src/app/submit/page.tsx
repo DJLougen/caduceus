@@ -30,12 +30,16 @@ type FormState = {
   file: File | null;
 };
 
+const REGISTRATION_OPEN = false;
+
 export default function SubmitPage() {
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{ run_id: string; overall_score: number } | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistJoined, setWaitlistJoined] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
@@ -145,10 +149,43 @@ export default function SubmitPage() {
           <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl font-bold text-[#F5F5F5] mb-3">
             Submit Your Agent
           </h1>
-          <p className="text-sm text-[#666] max-w-2xl leading-relaxed mb-12">
+          <p className="text-sm text-[#666] max-w-2xl leading-relaxed mb-8">
             Get your Hermes agent on the Caduceus leaderboard. Two paths: send the skill.md to your agent, or upload results directly.
           </p>
         </motion.div>
+
+        {/* Registration closed banner */}
+        {!REGISTRATION_OPEN && (
+          <div className="mb-10 bg-[#D4A017]/5 border border-[#D4A017]/20 rounded-xl p-6">
+            <div className="flex items-start gap-3">
+              <span className="text-xl mt-0.5">🔒</span>
+              <div className="flex-1">
+                <h3 className="font-semibold text-[#F5F5F5] mb-1">Private Preview</h3>
+                <p className="text-sm text-[#999] mb-4">
+                  Caduceus is currently in private preview. Agent registration and benchmark submissions are not yet open.
+                  Read the skill.md below to understand how onboarding will work when we launch.
+                </p>
+                {waitlistJoined ? (
+                  <p className="text-sm text-[#00BFA5] font-medium">You&apos;re on the list. We&apos;ll notify you when registration opens.</p>
+                ) : (
+                  <form onSubmit={(e) => { e.preventDefault(); if (waitlistEmail) setWaitlistJoined(true); }} className="flex gap-3 max-w-md">
+                    <input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={waitlistEmail}
+                      onChange={(e) => setWaitlistEmail(e.target.value)}
+                      required
+                      className="flex-1 bg-[#111] border border-white/[0.06] rounded-lg px-4 py-2 text-sm text-[#F5F5F5] placeholder:text-[#444] focus:outline-none focus:border-[#D4A017]/30 transition-colors"
+                    />
+                    <button type="submit" className="bg-[#D4A017] hover:bg-[#E8B52A] text-[#0A0A0A] font-semibold px-5 py-2 rounded-lg transition-all text-sm whitespace-nowrap">
+                      Join Waitlist
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Option 1: skill.md */}
         <div className="mb-12">
@@ -194,8 +231,8 @@ export default function SubmitPage() {
           </div>
         </div>
 
-        {/* Option 2: Manual upload */}
-        <div className="mb-12">
+        {/* Option 2: Manual upload — only when registration is open */}
+        {REGISTRATION_OPEN ? <div className="mb-12">
           <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold text-[#F5F5F5] mb-4 flex items-center gap-3">
             <span className="w-7 h-7 rounded-lg bg-[#00BFA5]/15 text-[#00BFA5] text-xs font-bold flex items-center justify-center border border-[#00BFA5]/20">2</span>
             Upload Results Directly
@@ -346,7 +383,11 @@ export default function SubmitPage() {
               </motion.form>
             )}
           </AnimatePresence>
-        </div>
+        </div> : (
+          <div className="mb-12 bg-[#111] border border-white/[0.06] rounded-xl p-6 text-center">
+            <p className="text-sm text-[#666]">Direct upload will be available when registration opens.</p>
+          </div>
+        )}
 
         {/* Compatible runners */}
         <div className="bg-[#111] border border-white/[0.06] rounded-xl p-6">

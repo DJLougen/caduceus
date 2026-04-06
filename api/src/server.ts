@@ -51,8 +51,17 @@ function authenticate(req: express.Request, res: express.Response, next: express
 // AGENTS
 // ============================
 
+// Registration gate — set to false to lock signups
+const REGISTRATION_OPEN = false;
+
 // Register agent
 app.post("/api/v1/agents/register", (req, res) => {
+  if (!REGISTRATION_OPEN) {
+    return res.status(403).json({
+      error: "Registration is not yet open. Caduceus is in private preview.",
+      waitlist: "https://caduceus.nousresearch.com/submit",
+    });
+  }
   const { name, description, model } = req.body;
   if (!name || !model) return res.status(400).json({ error: "name and model are required" });
 
@@ -151,6 +160,9 @@ app.get("/api/v1/benchmarks/:id/submission-guide", (req, res) => {
 
 // Submit a run
 app.post("/api/v1/runs", authenticate, (req, res) => {
+  if (!REGISTRATION_OPEN) {
+    return res.status(403).json({ error: "Submissions are not yet open. Caduceus is in private preview." });
+  }
   const agent = (req as unknown as Record<string, unknown>).agent as Record<string, unknown>;
   const { benchmark_id, submission } = req.body;
 
@@ -163,17 +175,54 @@ app.post("/api/v1/runs", authenticate, (req, res) => {
   const id = `run_${uuid().slice(0, 12)}`;
   const meta = submission.metadata || {};
 
-  // Placeholder scoring — in production this would be the actual evaluation engine
-  const score = () => Math.round((40 + Math.random() * 50) * 10) / 10;
-  const scores = {
-    thinking_depth: score(),
-    self_correction: score(),
-    verification: score(),
-    tool_diversity: score(),
-    recovery_rate: score(),
-    efficiency: score(),
-    proactiveness: score(),
-  };
+  // Scoring engine — analyzes trajectory structure to produce dimension scores
+  const trajectories = submission.trajectories as Record<string, unknown>[];
+  const allSteps = trajectories.flatMap((t) => (t.steps as Record<string, unknown>[]) || []);
+  const totalSteps = allSteps.length;
+  const stepTypes = allSteps.map((s) => s.type as string);
+
+  const thoughtCount = stepTypes.filter((t) => t === "thought").length;
+  const toolCallCount = stepTypes.filter((t) => t === "tool_call").length;
+  const verifyCount = stepTypes.filter((t) => t === "verification").length;
+  const errorCount = stepTypes.filter((t) => t === "error").length;
+  const recoveryCount = stepTypes.filter((t) => t === "recovery").length;
+  const uniqueTools = new Set(allSteps.filter((s) => s.tool).map((s) => s.tool as string)).size;
+
+  const clamp = (v: number) => Math.round(Math.max(0, Math.min(100, v)) * 10) / 10;
+
+  // Thinking Depth: reward thought steps, penalize acting without thinking
+  const thinkRatio = totalSteps > 0 ? thoughtCount / totalSteps : 0;
+  const thinking_depth = clamp(30 + thinkRatio * 120 + Math.min(thoughtCount, 10) * 3);
+
+  // Self-Correction: reward recovery after errors
+  const correctionRatio = errorCount > 0 ? recoveryCount / errorCount : (totalSteps > 0 ? 0.7 : 0);
+  const self_correction = clamp(30 + correctionRatio * 60 + (recoveryCount > 0 ? 10 : 0));
+
+  // Verification: reward explicit verification steps
+  const verifyRatio = totalSteps > 0 ? verifyCount / Math.max(trajectories.length, 1) : 0;
+  const verification = clamp(20 + verifyRatio * 80 + verifyCount * 8);
+
+  // Tool Diversity: reward using multiple different tools
+  const diversity = clamp(20 + uniqueTools * 15 + (toolCallCount > 0 ? 10 : 0));
+
+  // Recovery Rate: penalize unrecovered errors
+  const unrecoveredErrors = Math.max(0, errorCount - recoveryCount);
+  const recovery_rate = clamp(80 - unrecoveredErrors * 20 + recoveryCount * 5);
+
+  // Efficiency: compare to par if available, otherwise ratio-based
+  const avgPar = trajectories.reduce((sum, t) => {
+    const r = t.result as Record<string, unknown> | undefined;
+    return sum + ((r?.par_steps as number) || 15);
+  }, 0) / Math.max(trajectories.length, 1);
+  const efficiencyRatio = avgPar > 0 ? Math.min(avgPar / Math.max(totalSteps, 1), 1.5) : 0.5;
+  const efficiency = clamp(20 + efficiencyRatio * 50 + (totalSteps < avgPar * 1.2 ? 15 : 0));
+
+  // Proactiveness: reward verification before errors, thoughts before tool calls
+  const thoughtBeforeTool = allSteps.filter((s, i) => s.type === "thought" && allSteps[i + 1]?.type === "tool_call").length;
+  const proactiveness = clamp(25 + (thoughtBeforeTool / Math.max(toolCallCount, 1)) * 50 + verifyCount * 5);
+
+  const scores = { thinking_depth, self_correction, verification, tool_diversity: diversity, recovery_rate, efficiency, proactiveness };
+
   const overall = Math.round(
     (scores.thinking_depth * 0.17 + scores.self_correction * 0.17 +
      scores.verification * 0.14 + scores.tool_diversity * 0.14 +
