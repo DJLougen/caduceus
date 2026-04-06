@@ -124,7 +124,6 @@ Each Caduceus task is a JSON document:
   },
   "success_criteria": [...],
   "par_steps": 12,
-  "time_limit_seconds": 600
 }
 \`\`\`
 

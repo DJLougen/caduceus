@@ -17,13 +17,13 @@ const fadeUp = {
 };
 
 const DIMENSIONS = [
-  { icon: "🧠", name: "Thinking Depth", desc: "How deeply the agent reasons before acting — chain-of-thought quality and planning horizon." },
-  { icon: "🔄", name: "Self-Correction", desc: "Ability to detect its own mistakes mid-trajectory and course-correct without external prompting." },
-  { icon: "✅", name: "Verification", desc: "Does the agent verify its work? Checks outputs, reads results, confirms success before declaring done." },
-  { icon: "🛠️", name: "Tool Diversity", desc: "Breadth and appropriateness of tool usage — agents that reach for the right tool, not just the familiar one." },
-  { icon: "🔧", name: "Error Recovery", desc: "Graceful handling of unexpected failures, permission errors, and broken environments." },
-  { icon: "⚡", name: "Efficiency", desc: "Task completion with minimal unnecessary steps, token waste, and redundant operations." },
-  { icon: "🎯", name: "Proactiveness", desc: "Does the agent anticipate next steps, preemptively check for issues, and act without being explicitly told?" },
+  { icon: "\u03B8", name: "Thinking Depth", desc: "How deeply the agent reasons before acting — chain-of-thought quality and planning horizon." },
+  { icon: "\u03B4", name: "Self-Correction", desc: "Ability to detect its own mistakes mid-trajectory and course-correct without external prompting." },
+  { icon: "\u2713", name: "Verification", desc: "Does the agent verify its work? Checks outputs, reads results, confirms success before declaring done." },
+  { icon: "\u2726", name: "Tool Diversity", desc: "Breadth and appropriateness of tool usage — agents that reach for the right tool, not just the familiar one." },
+  { icon: "\u21BB", name: "Error Recovery", desc: "Graceful handling of unexpected failures, permission errors, and broken environments." },
+  { icon: "\u2192", name: "Efficiency", desc: "Task completion with minimal unnecessary steps, token waste, and redundant operations." },
+  { icon: "\u03C6", name: "Proactiveness", desc: "Does the agent anticipate next steps, preemptively check for issues, and act without being explicitly told?" },
 ];
 
 const STEPS = [
@@ -180,7 +180,7 @@ export default function HomePage() {
               transition={{ delay: i * 0.08 }}
               className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#D4A017]/20 transition-all duration-300 group"
             >
-              <div className="text-2xl mb-3">{d.icon}</div>
+              <div className="w-9 h-9 rounded-lg bg-[#D4A017]/10 border border-[#D4A017]/20 flex items-center justify-center text-[#D4A017] font-semibold text-lg mb-3">{d.icon}</div>
               <h3 className="font-semibold text-[#F5F5F5] mb-2 group-hover:text-[#D4A017] transition-colors">
                 {d.name}
               </h3>
@@ -243,7 +243,7 @@ export default function HomePage() {
                 className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#00BFA5]/20 transition-all duration-300 group h-full"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-2xl">{task.icon}</span>
+                  <span className="w-8 h-8 rounded-lg bg-[#00BFA5]/10 border border-[#00BFA5]/20 flex items-center justify-center text-[#00BFA5] font-mono text-[10px] font-bold">{task.icon}</span>
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
                     task.judging === "community" ? "text-purple-400 bg-purple-400/10 border-purple-400/20" :
                     task.judging === "hybrid" ? "text-[#00BFA5] bg-[#00BFA5]/10 border-[#00BFA5]/20" :

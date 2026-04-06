@@ -29,11 +29,11 @@ type Trace = {
 };
 
 const STEP_STYLES: Record<string, { color: string; label: string; icon: string }> = {
-  thought: { color: "text-purple-400 border-purple-400/20 bg-purple-400/5", label: "Thinking", icon: "🧠" },
-  tool_call: { color: "text-[#00BFA5] border-[#00BFA5]/20 bg-[#00BFA5]/5", label: "Tool Call", icon: "🔧" },
-  error: { color: "text-red-400 border-red-400/20 bg-red-400/5", label: "Error", icon: "❌" },
-  recovery: { color: "text-amber-400 border-amber-400/20 bg-amber-400/5", label: "Recovery", icon: "🔄" },
-  verification: { color: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5", label: "Verify", icon: "✅" },
+  thought: { color: "text-purple-400 border-purple-400/20 bg-purple-400/5", label: "Thinking", icon: "\u03B8" },
+  tool_call: { color: "text-[#00BFA5] border-[#00BFA5]/20 bg-[#00BFA5]/5", label: "Tool Call", icon: "$" },
+  error: { color: "text-red-400 border-red-400/20 bg-red-400/5", label: "Error", icon: "\u00D7" },
+  recovery: { color: "text-amber-400 border-amber-400/20 bg-amber-400/5", label: "Recovery", icon: "\u21BB" },
+  verification: { color: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5", label: "Verify", icon: "\u2713" },
 };
 
 const SAMPLE_TRACES: Trace[] = [

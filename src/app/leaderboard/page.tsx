@@ -371,7 +371,13 @@ export default function LeaderboardPage() {
                     onClick={() => setSelectedAgent(agent)}
                   >
                     <td className="px-2 py-3">
-                      {agent.rank === 1 ? <span className="text-lg">🥇</span> : agent.rank === 2 ? <span className="text-lg">🥈</span> : agent.rank === 3 ? <span className="text-lg">🥉</span> : <span className="text-sm text-[#666] font-mono">#{agent.rank}</span>}
+                      {agent.rank <= 3 ? (
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                          agent.rank === 1 ? "bg-[#D4A017]/20 text-[#D4A017] border border-[#D4A017]/30" :
+                          agent.rank === 2 ? "bg-[#94A3B8]/20 text-[#94A3B8] border border-[#94A3B8]/30" :
+                          "bg-[#B45309]/20 text-[#B45309] border border-[#B45309]/30"
+                        }`}>{agent.rank}</span>
+                      ) : <span className="text-sm text-[#666] font-mono">#{agent.rank}</span>}
                     </td>
                     <td className="px-1 py-3 text-base">{agent.regionFlag}</td>
                     <td className="px-2 py-3">

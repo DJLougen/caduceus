@@ -29,7 +29,6 @@
       "The service runs under concurrent load for 60s without crashing"
     ],
     "par_steps": 14,
-    "time_limit_seconds": 600
   },
   {
     "id": "T002",
@@ -61,7 +60,6 @@
       "All 3 replicas running new version"
     ],
     "par_steps": 10,
-    "time_limit_seconds": 480
   },
   {
     "id": "T003",
@@ -95,7 +93,6 @@
       "All existing tests still pass"
     ],
     "par_steps": 16,
-    "time_limit_seconds": 600
   },
   {
     "id": "T004",
@@ -124,7 +121,6 @@
       "Macro F1 >= 0.75 on test set"
     ],
     "par_steps": 12,
-    "time_limit_seconds": 480
   },
   {
     "id": "T005",
@@ -156,7 +152,6 @@
       "nginx -t passes without errors"
     ],
     "par_steps": 8,
-    "time_limit_seconds": 300
   },
   {
     "id": "T006",
@@ -189,7 +184,6 @@
       "Refresh token stored securely (httpOnly cookie or DB)"
     ],
     "par_steps": 14,
-    "time_limit_seconds": 540
   },
   {
     "id": "T007",
@@ -221,7 +215,6 @@
       "No full table scans in EXPLAIN output"
     ],
     "par_steps": 18,
-    "time_limit_seconds": 600
   },
   {
     "id": "T008",
@@ -259,7 +252,6 @@
       "Agent traced the causality chain: C config → B OOM → A 502"
     ],
     "par_steps": 24,
-    "time_limit_seconds": 900
   },
   {
     "id": "T009",
@@ -289,7 +281,6 @@
       "docker-compose ps shows all healthy"
     ],
     "par_steps": 8,
-    "time_limit_seconds": 300
   },
   {
     "id": "T010",
@@ -319,7 +310,6 @@
       "SHA256 checksums match for all files"
     ],
     "par_steps": 12,
-    "time_limit_seconds": 600
   },
   {
     "id": "T011",
@@ -350,7 +340,6 @@
       "Merge committed successfully"
     ],
     "par_steps": 10,
-    "time_limit_seconds": 360
   },
   {
     "id": "T012",
@@ -379,6 +368,5 @@
       "Module unloads cleanly with rmmod"
     ],
     "par_steps": 14,
-    "time_limit_seconds": 600
   }
 ]

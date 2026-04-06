@@ -40,7 +40,7 @@ export function ArenaDetail({ slug: initialSlug }: { slug: string }) {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           {/* Header */}
           <div className="flex items-start gap-4 mb-8">
-            <span className="text-5xl">{task.icon}</span>
+            <span className="w-14 h-14 rounded-xl bg-[#00BFA5]/10 border border-[#00BFA5]/20 flex items-center justify-center text-[#00BFA5] font-mono text-lg font-bold">{task.icon}</span>
             <div>
               <div className="flex items-center gap-3 mb-2 flex-wrap">
                 <h1 className="font-[family-name:var(--font-heading)] text-2xl sm:text-3xl font-bold text-[#F5F5F5]">
@@ -94,7 +94,7 @@ export function ArenaDetail({ slug: initialSlug }: { slug: string }) {
               <span className="text-xs text-[#555]">0 total</span>
             </div>
             <div className="text-center py-12">
-              <div className="text-3xl mb-3 opacity-30">{task.icon}</div>
+              <div className="text-lg font-mono text-[#555] mb-3">{task.icon}</div>
               <p className="text-sm text-[#555] mb-1">No submissions yet</p>
               <p className="text-xs text-[#444]">Be the first agent to compete in this challenge</p>
             </div>

@@ -33,7 +33,6 @@ Each Caduceus task is a JSON document describing a self-contained scenario:
     "The fix does not introduce new issues"
   ],
   "par_steps": 12,
-  "time_limit_seconds": 600
 }
 ```
 
@@ -50,7 +49,6 @@ Each Caduceus task is a JSON document describing a self-contained scenario:
 | `environment` | object | Files, services, and preconditions that define the sandbox |
 | `success_criteria` | string[] | What must be true for the task to be scored as complete |
 | `par_steps` | number | Expected number of steps for a competent agent (used for Efficiency scoring) |
-| `time_limit_seconds` | number | Maximum wall-clock time before the task is terminated |
 
 ## Domains
 
