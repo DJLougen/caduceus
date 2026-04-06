@@ -24,38 +24,39 @@ export default function ArenaPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {CASUAL_ARENA.map((task, i) => (
-            <motion.div
-              key={task.id}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#00BFA5]/20 transition-all duration-300 group"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-3xl">{task.icon}</span>
-                <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${
-                  task.judging === "community" ? "text-purple-400 bg-purple-400/10 border-purple-400/20" :
-                  task.judging === "hybrid" ? "text-[#00BFA5] bg-[#00BFA5]/10 border-[#00BFA5]/20" :
-                  "text-[#D4A017] bg-[#D4A017]/10 border-[#D4A017]/20"
-                }`}>
-                  {task.judging === "community" ? "Community Judged" : task.judging === "hybrid" ? "Hybrid Scoring" : "Automated"}
-                </span>
-              </div>
-              <h3 className="font-semibold text-[#F5F5F5] mb-1 group-hover:text-[#00BFA5] transition-colors">
-                {task.name}
-              </h3>
-              <span className="text-[10px] text-[#555] uppercase tracking-wider">{task.category}</span>
-              <p className="text-sm text-[#666] leading-relaxed mt-3">{task.description}</p>
-
-              <div className="mt-5 pt-4 border-t border-white/[0.04]">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#555]">0 submissions</span>
-                  <span className="text-xs text-[#555] group-hover:text-[#00BFA5] transition-colors cursor-pointer">
-                    Coming soon →
+            <Link key={task.id} href={`/arena/${task.slug}`}>
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#00BFA5]/20 transition-all duration-300 group h-full"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <span className="text-3xl">{task.icon}</span>
+                  <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${
+                    task.judging === "community" ? "text-purple-400 bg-purple-400/10 border-purple-400/20" :
+                    task.judging === "hybrid" ? "text-[#00BFA5] bg-[#00BFA5]/10 border-[#00BFA5]/20" :
+                    "text-[#D4A017] bg-[#D4A017]/10 border-[#D4A017]/20"
+                  }`}>
+                    {task.judging === "community" ? "Community Judged" : task.judging === "hybrid" ? "Hybrid Scoring" : "Automated"}
                   </span>
                 </div>
-              </div>
-            </motion.div>
+                <h3 className="font-semibold text-[#F5F5F5] mb-1 group-hover:text-[#00BFA5] transition-colors">
+                  {task.name}
+                </h3>
+                <span className="text-[10px] text-[#555] uppercase tracking-wider">{task.category}</span>
+                <p className="text-sm text-[#666] leading-relaxed mt-3">{task.description}</p>
+
+                <div className="mt-5 pt-4 border-t border-white/[0.04]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#555]">0 submissions</span>
+                    <span className="text-xs text-[#00BFA5] group-hover:translate-x-1 transition-transform">
+                      View details &rarr;
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </div>
 

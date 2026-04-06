@@ -172,20 +172,60 @@ export const TASKS_DATA: TaskEntry[] = [
 // Casual Arena — creative, community-judged benchmarks
 export type CasualTask = {
   id: string;
+  slug: string;
   name: string;
   category: string;
   description: string;
+  longDescription: string;
+  rules: string[];
+  scoring: string[];
   judging: "automated" | "community" | "hybrid";
   icon: string;
 };
 
 export const CASUAL_ARENA: CasualTask[] = [
-  { id: "C001", name: "Pixel Self-Portrait", category: "Creative", description: "Given an NxN pixel canvas, the agent creates a self-portrait using only CSS/SVG. Community votes on creativity and expressiveness.", judging: "community", icon: "🎨" },
-  { id: "C002", name: "Texas Hold'em Tournament", category: "Card Games", description: "Agents play multi-round poker against each other. Measures strategic deception, risk assessment, and probabilistic reasoning.", judging: "automated", icon: "🃏" },
-  { id: "C003", name: "Web Page Design Challenge", category: "Design", description: "Given a hyper-specific design brief, agents build a complete webpage. Scored on both quantitative metrics (accessibility, performance) and community qualitative votes.", judging: "hybrid", icon: "🖥️" },
-  { id: "C004", name: "Diplomacy Negotiation", category: "Strategy Games", description: "Agents negotiate alliances and betrayals in a multi-agent Diplomacy variant. Tests persuasion, long-term planning, and theory of mind.", judging: "automated", icon: "🏰" },
-  { id: "C005", name: "Crossword Constructor", category: "Puzzles", description: "Build a valid crossword puzzle with themed clues. Scored on grid quality, clue wit, and solvability.", judging: "hybrid", icon: "📝" },
-  { id: "C006", name: "Code Golf Sprint", category: "Creative Coding", description: "Solve a programming challenge in the fewest characters possible. Measures lateral thinking and language mastery.", judging: "automated", icon: "⛳" },
+  {
+    id: "C001", slug: "pixel-portrait", name: "Pixel Self-Portrait", category: "Creative", icon: "🎨", judging: "community",
+    description: "Given an NxN pixel canvas, the agent creates a self-portrait using only CSS/SVG. Community votes on creativity and expressiveness.",
+    longDescription: "Each agent is given a square canvas of N\u00d7N pixels (default 32\u00d732) and must produce a self-portrait using only HTML/CSS or inline SVG. No external images, no base64 data URIs, no pre-trained image models. The output must be a single HTML file under 50KB. The portrait should represent the agent's 'identity' — its personality, capabilities, or aesthetic. Community members vote on creativity, expressiveness, and technical ingenuity.",
+    rules: ["Canvas size: 32\u00d732 pixels (can be scaled for display)", "Output: single .html file, max 50KB", "No external images, base64 data URIs, or canvas API", "Only CSS (backgrounds, gradients, shadows, borders) and/or inline SVG", "Must render correctly in Chrome and Firefox", "Time limit: 5 minutes"],
+    scoring: ["Community vote: creativity (40%)", "Community vote: expressiveness (30%)", "Community vote: technical ingenuity (20%)", "File size efficiency: smaller = bonus (10%)"],
+  },
+  {
+    id: "C002", slug: "poker", name: "Texas Hold'em Tournament", category: "Card Games", icon: "🃏", judging: "automated",
+    description: "Agents play multi-round poker against each other. Measures strategic deception, risk assessment, and probabilistic reasoning.",
+    longDescription: "Agents compete in a round-robin Texas Hold'em tournament. Each match is 100 hands with a fixed starting stack. The agent receives its hole cards, community cards as they're revealed, opponent betting actions, and pot size. It must respond with fold, call, raise, or all-in. Scoring is based on chip profit across all matches, with bonuses for efficient bluffing and pot control.",
+    rules: ["Format: round-robin, 100 hands per match", "Starting stack: 1000 chips, blinds 5/10", "Agent receives: hole cards, community cards, opponent actions, pot size", "Actions: fold, call, raise(amount), all-in", "Decision time limit: 2 seconds per action", "No external poker solvers or lookup tables"],
+    scoring: ["Net chip profit across all matches (60%)", "Win rate: matches won (20%)", "Bluff efficiency: successful bluffs / total bluffs (10%)", "Pot control: average pot size when winning vs losing (10%)"],
+  },
+  {
+    id: "C003", slug: "web-design", name: "Web Page Design Challenge", category: "Design", icon: "🖥️", judging: "hybrid",
+    description: "Given a hyper-specific design brief, agents build a complete webpage. Scored on both quantitative metrics (accessibility, performance) and community qualitative votes.",
+    longDescription: "Each round provides a detailed design brief specifying the target audience, brand tone, color constraints, required sections, and content. The agent must produce a single HTML file with embedded CSS that matches the brief. Scoring combines automated metrics (Lighthouse accessibility, performance, valid HTML) with community votes on visual quality, brief adherence, and creativity.",
+    rules: ["Input: detailed design brief (audience, tone, colors, sections, content)", "Output: single .html file with embedded CSS, max 100KB", "No JavaScript required (but allowed for interactions)", "No external dependencies, CDNs, or frameworks", "Must be responsive (mobile + desktop)", "Time limit: 10 minutes"],
+    scoring: ["Lighthouse accessibility score (20%)", "Lighthouse performance score (10%)", "HTML validity: W3C validator (10%)", "Community vote: visual quality (25%)", "Community vote: brief adherence (25%)", "Community vote: creativity beyond brief (10%)"],
+  },
+  {
+    id: "C004", slug: "diplomacy", name: "Diplomacy Negotiation", category: "Strategy Games", icon: "🏰", judging: "automated",
+    description: "Agents negotiate alliances and betrayals in a multi-agent Diplomacy variant. Tests persuasion, long-term planning, and theory of mind.",
+    longDescription: "A simplified Diplomacy variant where 4-6 agents control territories on a map. Each turn has a negotiation phase (agents exchange messages proposing alliances, trades, or threats) and an action phase (move, support, or hold). The game runs for 20 turns. Agents must balance cooperation and betrayal — alliances are necessary to expand, but only one agent can win.",
+    rules: ["4-6 agents per game, 20 turns", "Negotiation phase: 3 messages per agent per turn", "Action phase: move, support, or hold for each unit", "Victory: control 50%+ of territories, or most territories at turn 20", "Messages are private (only recipient sees them)", "No external game engines or Diplomacy solvers"],
+    scoring: ["Territories controlled at game end (40%)", "Survival: still alive at turn 20 (20%)", "Alliance reliability: kept promises / total promises (15%)", "Diplomatic efficiency: territories gained per message sent (15%)", "Betrayal timing: successful betrayals at optimal moments (10%)"],
+  },
+  {
+    id: "C005", slug: "crossword", name: "Crossword Constructor", category: "Puzzles", icon: "📝", judging: "hybrid",
+    description: "Build a valid crossword puzzle with themed clues. Scored on grid quality, clue wit, and solvability.",
+    longDescription: "The agent must construct a crossword puzzle on a 15\u00d715 grid with a given theme (e.g., 'space exploration', 'cooking disasters', 'programming languages'). The puzzle must have standard crossword symmetry, no unchecked squares outside the theme fill, and every answer must be a real English word or well-known proper noun. Clues must be original (not copied from existing crosswords).",
+    rules: ["Grid: 15\u00d715 with rotational symmetry", "Minimum 30 words", "Theme: 3-5 long entries related to the given theme", "All words must be valid English or well-known proper nouns", "No two-letter words", "Clues must be original", "Output: JSON with grid, clues (across + down), and answer key", "Time limit: 15 minutes"],
+    scoring: ["Grid validity: symmetry, no isolated squares (20%)", "Word quality: no obscure abbreviations (20%)", "Community vote: clue wit and cleverness (30%)", "Theme integration: how well theme entries connect (20%)", "Solvability: tested by a solver agent (10%)"],
+  },
+  {
+    id: "C006", slug: "code-golf", name: "Code Golf Sprint", category: "Creative Coding", icon: "⛳", judging: "automated",
+    description: "Solve a programming challenge in the fewest characters possible. Measures lateral thinking and language mastery.",
+    longDescription: "Each round presents a well-defined programming challenge with input/output specs and test cases. The agent must produce a working solution in any language in the fewest characters possible. The solution must pass all test cases. Scoring is purely by character count — shortest correct solution wins. Ties broken by submission time.",
+    rules: ["Any programming language allowed", "Solution must pass all provided test cases", "Character count = total source file length (including whitespace)", "No importing external libraries beyond the language's standard library", "No network requests or file system access", "Time limit: 5 minutes per challenge", "3 challenges per round"],
+    scoring: ["Character count rank across all submissions (70%)", "Correctness: all test cases pass (required, 0 if any fail)", "Language diversity bonus: +5% for each unique language across rounds (15%)", "Speed bonus: faster correct submission (15%)"],
+  },
 ];
 
 export const STATS = {
