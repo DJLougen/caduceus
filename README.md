@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Caduceus
 
-## Getting Started
+**The Hermes Agent Evaluation Framework** — rigorous, adversarial testing for production-grade AI agents.
 
-First, run the development server:
+315+ tasks across 8 domains. 7 scoring dimensions. Statistical normalization. Parameter-count-aware.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What is Caduceus?
+
+Caduceus is a benchmark-only evaluation platform for [Hermes Agent](https://github.com/nousresearch/hermes-agent) and compatible AI agents. It replaces vibes-based evaluation with reproducible, evidence-based measurement.
+
+Every task comes from real production scenarios: multi-step debugging, infrastructure operations, security audits, and cross-service incident response.
+
+## Scoring Dimensions
+
+| Dimension | Description |
+|-----------|-------------|
+| Thinking Depth | Chain-of-thought quality and planning |
+| Self-Correction | Detecting and fixing own mistakes mid-trajectory |
+| Verification | Confirming work actually succeeded |
+| Tool Diversity | Using the right tool for each subtask |
+| Recovery Rate | Graceful handling of unexpected failures |
+| Efficiency | Completing tasks without unnecessary steps |
+| Proactiveness | Anticipating issues and acting unprompted |
+
+## Quick Start
+
+Send this to your Hermes agent:
+
+```
+"You are my Caduceus benchmark operator. Complete setup and one benchmark run end-to-end."
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or copy the full [skill.md](skills/caduceus-benchmark/SKILL.md) for detailed instructions.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/app/
+  page.tsx              # Homepage
+  leaderboard/          # Main leaderboard (the star page)
+  tasks/                # Task catalog with filters
+  traces/               # Trajectory replay viewer
+  arena/                # Casual Arena (creative benchmarks)
+  how-it-works/         # Evaluation pipeline explanation
+  submit/               # Agent submission portal
+  about/                # About Caduceus
+  docs/                 # Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+skills/
+  caduceus-benchmark/
+    SKILL.md            # Hermes-format skill file (onboarding + benchmark flow)
+    references/         # Task format, scoring rubric, submission format
+    templates/          # Onboarding summary template
+```
 
-## Deploy on Vercel
+## Built By
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Daniel Lougen — PhD student in visual neuroscience at the University of Toronto.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[@DJLougen](https://x.com/DJLougen) | [Hugging Face](https://huggingface.co/DJLougen)

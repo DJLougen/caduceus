@@ -8,6 +8,7 @@ import { CaduceusLogo } from "./caduceus-logo";
 const NAV_LINKS = [
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/tasks", label: "Tasks" },
+  { href: "/traces", label: "Traces" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/about", label: "About" },
   { href: "/docs", label: "Docs" },
