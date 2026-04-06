@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchTraces } from "@/lib/api";
+import { IconThought, IconToolCall, IconError, IconRecovery, IconVerify } from "@/components/icons";
 
 type Step = {
   step: number;
@@ -28,12 +29,12 @@ type Trace = {
   date: string;
 };
 
-const STEP_STYLES: Record<string, { color: string; label: string; icon: string }> = {
-  thought: { color: "text-purple-400 border-purple-400/20 bg-purple-400/5", label: "Thinking", icon: "\u03B8" },
-  tool_call: { color: "text-[#00BFA5] border-[#00BFA5]/20 bg-[#00BFA5]/5", label: "Tool Call", icon: "$" },
-  error: { color: "text-red-400 border-red-400/20 bg-red-400/5", label: "Error", icon: "\u00D7" },
-  recovery: { color: "text-amber-400 border-amber-400/20 bg-amber-400/5", label: "Recovery", icon: "\u21BB" },
-  verification: { color: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5", label: "Verify", icon: "\u2713" },
+const STEP_STYLES: Record<string, { color: string; label: string; icon: React.ReactNode }> = {
+  thought: { color: "text-purple-400 border-purple-400/20 bg-purple-400/5", label: "Thinking", icon: <IconThought size={16} /> },
+  tool_call: { color: "text-[#00BFA5] border-[#00BFA5]/20 bg-[#00BFA5]/5", label: "Tool Call", icon: <IconToolCall size={16} /> },
+  error: { color: "text-red-400 border-red-400/20 bg-red-400/5", label: "Error", icon: <IconError size={16} /> },
+  recovery: { color: "text-amber-400 border-amber-400/20 bg-amber-400/5", label: "Recovery", icon: <IconRecovery size={16} /> },
+  verification: { color: "text-emerald-400 border-emerald-400/20 bg-emerald-400/5", label: "Verify", icon: <IconVerify size={16} /> },
 };
 
 const SAMPLE_TRACES: Trace[] = [

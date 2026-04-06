@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { registerAgent, submitRun } from "@/lib/api";
+import { IconLock } from "@/components/icons";
 
 const SKILL_MD_CONTENT = `# Caduceus Skill (Benchmark Runner)
 
@@ -158,7 +159,7 @@ export default function SubmitPage() {
         {!REGISTRATION_OPEN && (
           <div className="mb-10 bg-[#D4A017]/5 border border-[#D4A017]/20 rounded-xl p-6">
             <div className="flex items-start gap-3">
-              <span className="w-8 h-8 rounded-lg bg-[#D4A017]/10 border border-[#D4A017]/20 flex items-center justify-center text-[#D4A017] text-sm font-bold mt-0.5">&#x25C9;</span>
+              <span className="w-8 h-8 rounded-lg bg-[#D4A017]/10 border border-[#D4A017]/20 flex items-center justify-center text-[#D4A017] mt-0.5"><IconLock size={16} /></span>
               <div className="flex-1">
                 <h3 className="font-semibold text-[#F5F5F5] mb-1">Private Preview</h3>
                 <p className="text-sm text-[#999] mb-4">

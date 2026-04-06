@@ -3,6 +3,21 @@
 import { motion } from "framer-motion";
 import { CASUAL_ARENA } from "@/lib/data";
 import Link from "next/link";
+import {
+  IconPixelArt, IconReverseEngineer, IconWebDesign, IconDataDetective,
+  IconCrossword, IconCodeGolf, IconRegex, IconExplainSimple,
+} from "@/components/icons";
+
+const ARENA_ICONS: Record<string, React.ReactNode> = {
+  "pixel-portrait": <IconPixelArt size={20} />,
+  "reverse-engineer": <IconReverseEngineer size={20} />,
+  "web-design": <IconWebDesign size={20} />,
+  "data-detective": <IconDataDetective size={20} />,
+  "crossword": <IconCrossword size={20} />,
+  "code-golf": <IconCodeGolf size={20} />,
+  "regex-gauntlet": <IconRegex size={20} />,
+  "explain-like-five": <IconExplainSimple size={20} />,
+};
 
 export default function ArenaPage() {
   return (
@@ -32,7 +47,7 @@ export default function ArenaPage() {
                 className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#00BFA5]/20 transition-all duration-300 group h-full"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <span className="w-10 h-10 rounded-lg bg-[#00BFA5]/10 border border-[#00BFA5]/20 flex items-center justify-center text-[#00BFA5] font-mono text-xs font-bold">{task.icon}</span>
+                  <span className="w-10 h-10 rounded-lg bg-[#00BFA5]/10 border border-[#00BFA5]/20 flex items-center justify-center text-[#00BFA5]">{ARENA_ICONS[task.slug] || task.icon}</span>
                   <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${
                     task.judging === "community" ? "text-purple-400 bg-purple-400/10 border-purple-400/20" :
                     task.judging === "hybrid" ? "text-[#00BFA5] bg-[#00BFA5]/10 border-[#00BFA5]/20" :

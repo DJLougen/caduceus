@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CaduceusLogo } from "@/components/caduceus-logo";
+import {
+  IconThinkingDepth, IconSelfCorrection, IconVerification,
+  IconToolDiversity, IconErrorRecovery, IconEfficiency, IconProactiveness,
+  IconPixelArt, IconReverseEngineer, IconWebDesign, IconDataDetective,
+  IconCrossword, IconCodeGolf, IconRegex, IconExplainSimple,
+} from "@/components/icons";
 import { STATS, CASUAL_ARENA } from "@/lib/data";
 import { fetchStats } from "@/lib/api";
 
@@ -16,14 +22,35 @@ const fadeUp = {
   }),
 };
 
+const DIMENSION_ICONS: Record<string, React.ReactNode> = {
+  "Thinking Depth": <IconThinkingDepth size={18} />,
+  "Self-Correction": <IconSelfCorrection size={18} />,
+  "Verification": <IconVerification size={18} />,
+  "Tool Diversity": <IconToolDiversity size={18} />,
+  "Error Recovery": <IconErrorRecovery size={18} />,
+  "Efficiency": <IconEfficiency size={18} />,
+  "Proactiveness": <IconProactiveness size={18} />,
+};
+
+const ARENA_ICONS: Record<string, React.ReactNode> = {
+  "pixel-portrait": <IconPixelArt size={16} />,
+  "reverse-engineer": <IconReverseEngineer size={16} />,
+  "web-design": <IconWebDesign size={16} />,
+  "data-detective": <IconDataDetective size={16} />,
+  "crossword": <IconCrossword size={16} />,
+  "code-golf": <IconCodeGolf size={16} />,
+  "regex-gauntlet": <IconRegex size={16} />,
+  "explain-like-five": <IconExplainSimple size={16} />,
+};
+
 const DIMENSIONS = [
-  { icon: "\u03B8", name: "Thinking Depth", desc: "How deeply the agent reasons before acting — chain-of-thought quality and planning horizon." },
-  { icon: "\u03B4", name: "Self-Correction", desc: "Ability to detect its own mistakes mid-trajectory and course-correct without external prompting." },
-  { icon: "\u2713", name: "Verification", desc: "Does the agent verify its work? Checks outputs, reads results, confirms success before declaring done." },
-  { icon: "\u2726", name: "Tool Diversity", desc: "Breadth and appropriateness of tool usage — agents that reach for the right tool, not just the familiar one." },
-  { icon: "\u21BB", name: "Error Recovery", desc: "Graceful handling of unexpected failures, permission errors, and broken environments." },
-  { icon: "\u2192", name: "Efficiency", desc: "Task completion with minimal unnecessary steps, token waste, and redundant operations." },
-  { icon: "\u03C6", name: "Proactiveness", desc: "Does the agent anticipate next steps, preemptively check for issues, and act without being explicitly told?" },
+  { name: "Thinking Depth", desc: "How deeply the agent reasons before acting — chain-of-thought quality and planning horizon." },
+  { name: "Self-Correction", desc: "Ability to detect its own mistakes mid-trajectory and course-correct without external prompting." },
+  { name: "Verification", desc: "Does the agent verify its work? Checks outputs, reads results, confirms success before declaring done." },
+  { name: "Tool Diversity", desc: "Breadth and appropriateness of tool usage — agents that reach for the right tool, not just the familiar one." },
+  { name: "Error Recovery", desc: "Graceful handling of unexpected failures, permission errors, and broken environments." },
+  { name: "Efficiency", desc: "Task completion with minimal unnecessary steps, token waste, and redundant operations." },
+  { name: "Proactiveness", desc: "Does the agent anticipate next steps, preemptively check for issues, and act without being explicitly told?" },
 ];
 
 const STEPS = [
@@ -180,7 +207,7 @@ export default function HomePage() {
               transition={{ delay: i * 0.08 }}
               className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#D4A017]/20 transition-all duration-300 group"
             >
-              <div className="w-9 h-9 rounded-lg bg-[#D4A017]/10 border border-[#D4A017]/20 flex items-center justify-center text-[#D4A017] font-semibold text-lg mb-3">{d.icon}</div>
+              <div className="w-9 h-9 rounded-lg bg-[#D4A017]/10 border border-[#D4A017]/20 flex items-center justify-center text-[#D4A017] mb-3">{DIMENSION_ICONS[d.name]}</div>
               <h3 className="font-semibold text-[#F5F5F5] mb-2 group-hover:text-[#D4A017] transition-colors">
                 {d.name}
               </h3>
@@ -243,7 +270,7 @@ export default function HomePage() {
                 className="bg-[#111] border border-white/[0.06] rounded-xl p-6 hover:border-[#00BFA5]/20 transition-all duration-300 group h-full"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <span className="w-8 h-8 rounded-lg bg-[#00BFA5]/10 border border-[#00BFA5]/20 flex items-center justify-center text-[#00BFA5] font-mono text-[10px] font-bold">{task.icon}</span>
+                  <span className="w-8 h-8 rounded-lg bg-[#00BFA5]/10 border border-[#00BFA5]/20 flex items-center justify-center text-[#00BFA5]">{ARENA_ICONS[task.slug] || task.icon}</span>
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
                     task.judging === "community" ? "text-purple-400 bg-purple-400/10 border-purple-400/20" :
                     task.judging === "hybrid" ? "text-[#00BFA5] bg-[#00BFA5]/10 border-[#00BFA5]/20" :
