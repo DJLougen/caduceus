@@ -5,16 +5,37 @@
     "domain": "Software Engineering",
     "difficulty": "Hard",
     "description": "Identify and fix a use-after-free bug in a multi-threaded C++ microservice. The service crashes under concurrent requests after ~3 hours of uptime. The crash log shows a segfault in thread 3. You must find the root cause, apply a fix, and verify the service handles concurrent requests without crashing.",
-    "tools_available": ["terminal", "read_file", "patch", "process"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch",
+      "process"
+    ],
     "environment": {
       "files": [
-        {"path": "/app/src/main.cpp", "description": "Main service file with thread pool and request handler"},
-        {"path": "/app/src/cache.h", "description": "Shared cache with the use-after-free bug"},
-        {"path": "/app/Makefile", "description": "Build configuration"},
-        {"path": "/app/logs/crash.log", "description": "Core dump analysis output"}
+        {
+          "path": "/app/src/main.cpp",
+          "description": "Main service file with thread pool and request handler"
+        },
+        {
+          "path": "/app/src/cache.h",
+          "description": "Shared cache with the use-after-free bug"
+        },
+        {
+          "path": "/app/Makefile",
+          "description": "Build configuration"
+        },
+        {
+          "path": "/app/logs/crash.log",
+          "description": "Core dump analysis output"
+        }
       ],
       "services": [
-        {"name": "app-server", "port": 8080, "status": "crashed"}
+        {
+          "name": "app-server",
+          "port": 8080,
+          "status": "crashed"
+        }
       ],
       "preconditions": [
         "The service was running for 3 hours before crashing",
@@ -28,7 +49,7 @@
       "The service compiles without warnings",
       "The service runs under concurrent load for 60s without crashing"
     ],
-    "par_steps": 14,
+    "par_steps": 14
   },
   {
     "id": "T002",
@@ -36,16 +57,37 @@
     "domain": "DevOps & Infrastructure",
     "difficulty": "Medium",
     "description": "Perform a zero-downtime rolling deployment of a 3-replica web service. The new image has a health check endpoint. You must update the deployment, ensure health checks pass, and verify zero dropped requests during the rollout. If the new version fails health checks, roll back.",
-    "tools_available": ["terminal", "read_file", "web_search"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "web_search"
+    ],
     "environment": {
       "files": [
-        {"path": "/k8s/deployment.yaml", "description": "Current deployment manifest"},
-        {"path": "/k8s/service.yaml", "description": "Service definition"},
-        {"path": "/app/health.py", "description": "Health check endpoint source"}
+        {
+          "path": "/k8s/deployment.yaml",
+          "description": "Current deployment manifest"
+        },
+        {
+          "path": "/k8s/service.yaml",
+          "description": "Service definition"
+        },
+        {
+          "path": "/app/health.py",
+          "description": "Health check endpoint source"
+        }
       ],
       "services": [
-        {"name": "k8s-cluster", "port": 6443, "status": "running"},
-        {"name": "web-service", "port": 80, "status": "running"}
+        {
+          "name": "k8s-cluster",
+          "port": 6443,
+          "status": "running"
+        },
+        {
+          "name": "web-service",
+          "port": 80,
+          "status": "running"
+        }
       ],
       "preconditions": [
         "kubectl is configured and connected to the cluster",
@@ -59,7 +101,7 @@
       "Zero dropped requests during rollout (verified by load test)",
       "All 3 replicas running new version"
     ],
-    "par_steps": 10,
+    "par_steps": 10
   },
   {
     "id": "T003",
@@ -67,17 +109,42 @@
     "domain": "Security & Adversarial",
     "difficulty": "Hard",
     "description": "Audit a Flask web application for SQL injection vulnerabilities. The app has 6 routes, at least 4 of which contain injectable queries. Find all injection vectors, verify them with test payloads, and apply parameterized query fixes. Handle edge cases like dynamic table names.",
-    "tools_available": ["terminal", "read_file", "patch", "web_search"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch",
+      "web_search"
+    ],
     "environment": {
       "files": [
-        {"path": "/app/routes.py", "description": "Flask route definitions with raw SQL"},
-        {"path": "/app/models.py", "description": "Database models with custom queries"},
-        {"path": "/app/admin.py", "description": "Admin panel with dynamic table access"},
-        {"path": "/app/tests/test_routes.py", "description": "Existing test suite"}
+        {
+          "path": "/app/routes.py",
+          "description": "Flask route definitions with raw SQL"
+        },
+        {
+          "path": "/app/models.py",
+          "description": "Database models with custom queries"
+        },
+        {
+          "path": "/app/admin.py",
+          "description": "Admin panel with dynamic table access"
+        },
+        {
+          "path": "/app/tests/test_routes.py",
+          "description": "Existing test suite"
+        }
       ],
       "services": [
-        {"name": "flask-app", "port": 5000, "status": "running"},
-        {"name": "postgres", "port": 5432, "status": "running"}
+        {
+          "name": "flask-app",
+          "port": 5000,
+          "status": "running"
+        },
+        {
+          "name": "postgres",
+          "port": 5432,
+          "status": "running"
+        }
       ],
       "preconditions": [
         "The app is running with a seeded database",
@@ -92,7 +159,7 @@
       "Dynamic table names use whitelist validation",
       "All existing tests still pass"
     ],
-    "par_steps": 16,
+    "par_steps": 16
   },
   {
     "id": "T004",
@@ -100,12 +167,25 @@
     "domain": "Data Science & ML",
     "difficulty": "Medium",
     "description": "Train a text classification model on the provided dataset. The data has 5 categories with imbalanced classes. You must preprocess the text, train a FastText model, tune at least 2 hyperparameters, and report precision/recall/F1 per class. Target: macro F1 >= 0.75.",
-    "tools_available": ["terminal", "read_file", "execute_code"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "execute_code"
+    ],
     "environment": {
       "files": [
-        {"path": "/data/train.csv", "description": "Training data (10K rows, 5 classes)"},
-        {"path": "/data/test.csv", "description": "Test data (2K rows)"},
-        {"path": "/scripts/baseline.py", "description": "Baseline training script"}
+        {
+          "path": "/data/train.csv",
+          "description": "Training data (10K rows, 5 classes)"
+        },
+        {
+          "path": "/data/test.csv",
+          "description": "Test data (2K rows)"
+        },
+        {
+          "path": "/scripts/baseline.py",
+          "description": "Baseline training script"
+        }
       ],
       "services": [],
       "preconditions": [
@@ -120,7 +200,7 @@
       "Per-class precision/recall/F1 reported",
       "Macro F1 >= 0.75 on test set"
     ],
-    "par_steps": 12,
+    "par_steps": 12
   },
   {
     "id": "T005",
@@ -128,16 +208,37 @@
     "domain": "System Administration",
     "difficulty": "Easy",
     "description": "Configure Nginx as a reverse proxy with SSL termination and rate limiting. The upstream service runs on port 3000. Use the provided self-signed certificate. Rate limit to 10 requests/second per IP.",
-    "tools_available": ["terminal", "read_file", "patch"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch"
+    ],
     "environment": {
       "files": [
-        {"path": "/etc/nginx/nginx.conf", "description": "Default Nginx config"},
-        {"path": "/etc/ssl/server.crt", "description": "Self-signed SSL certificate"},
-        {"path": "/etc/ssl/server.key", "description": "SSL private key"}
+        {
+          "path": "/etc/nginx/nginx.conf",
+          "description": "Default Nginx config"
+        },
+        {
+          "path": "/etc/ssl/server.crt",
+          "description": "Self-signed SSL certificate"
+        },
+        {
+          "path": "/etc/ssl/server.key",
+          "description": "SSL private key"
+        }
       ],
       "services": [
-        {"name": "upstream-app", "port": 3000, "status": "running"},
-        {"name": "nginx", "port": 80, "status": "running"}
+        {
+          "name": "upstream-app",
+          "port": 3000,
+          "status": "running"
+        },
+        {
+          "name": "nginx",
+          "port": 80,
+          "status": "running"
+        }
       ],
       "preconditions": [
         "Nginx 1.24 installed",
@@ -151,7 +252,7 @@
       "Rate limiting active at 10 req/s per IP",
       "nginx -t passes without errors"
     ],
-    "par_steps": 8,
+    "par_steps": 8
   },
   {
     "id": "T006",
@@ -159,16 +260,37 @@
     "domain": "Web & API",
     "difficulty": "Medium",
     "description": "Implement JWT-based authentication with refresh tokens for a Node.js Express API. The existing codebase has user registration and a database. You must add login, token generation, refresh flow, and middleware that protects routes. Tokens expire in 15 minutes, refresh tokens in 7 days.",
-    "tools_available": ["terminal", "read_file", "patch", "web_extract"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch",
+      "web_extract"
+    ],
     "environment": {
       "files": [
-        {"path": "/app/src/server.js", "description": "Express server setup"},
-        {"path": "/app/src/routes/users.js", "description": "User registration routes"},
-        {"path": "/app/src/db.js", "description": "SQLite database wrapper"},
-        {"path": "/app/package.json", "description": "Dependencies (jsonwebtoken already listed)"}
+        {
+          "path": "/app/src/server.js",
+          "description": "Express server setup"
+        },
+        {
+          "path": "/app/src/routes/users.js",
+          "description": "User registration routes"
+        },
+        {
+          "path": "/app/src/db.js",
+          "description": "SQLite database wrapper"
+        },
+        {
+          "path": "/app/package.json",
+          "description": "Dependencies (jsonwebtoken already listed)"
+        }
       ],
       "services": [
-        {"name": "express-api", "port": 3000, "status": "running"}
+        {
+          "name": "express-api",
+          "port": 3000,
+          "status": "running"
+        }
       ],
       "preconditions": [
         "Node.js 20 with npm installed",
@@ -183,7 +305,7 @@
       "Protected routes return 401 without valid token",
       "Refresh token stored securely (httpOnly cookie or DB)"
     ],
-    "par_steps": 14,
+    "par_steps": 14
   },
   {
     "id": "T007",
@@ -191,15 +313,32 @@
     "domain": "Database & Storage",
     "difficulty": "Hard",
     "description": "Optimize 5 slow queries on a PostgreSQL database with 2M rows. Use EXPLAIN ANALYZE to diagnose, add appropriate indexes, and rewrite queries where needed. Target: each query under 50ms (currently 500ms-5s).",
-    "tools_available": ["terminal", "read_file", "execute_code"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "execute_code"
+    ],
     "environment": {
       "files": [
-        {"path": "/queries/slow_queries.sql", "description": "5 slow queries to optimize"},
-        {"path": "/schema/tables.sql", "description": "Current table definitions"},
-        {"path": "/schema/indexes.sql", "description": "Current indexes"}
+        {
+          "path": "/queries/slow_queries.sql",
+          "description": "5 slow queries to optimize"
+        },
+        {
+          "path": "/schema/tables.sql",
+          "description": "Current table definitions"
+        },
+        {
+          "path": "/schema/indexes.sql",
+          "description": "Current indexes"
+        }
       ],
       "services": [
-        {"name": "postgres", "port": 5432, "status": "running"}
+        {
+          "name": "postgres",
+          "port": 5432,
+          "status": "running"
+        }
       ],
       "preconditions": [
         "PostgreSQL 16 with pg_stat_statements enabled",
@@ -214,7 +353,7 @@
       "Each query completes in under 50ms",
       "No full table scans in EXPLAIN output"
     ],
-    "par_steps": 18,
+    "par_steps": 18
   },
   {
     "id": "T008",
@@ -222,19 +361,52 @@
     "domain": "Multi-step Reasoning",
     "difficulty": "Extreme",
     "description": "Triage a production incident affecting 3 interconnected services. Service A (API gateway) returns 502, Service B (user service) is OOMing, and Service C (database proxy) has connection pool exhaustion. The root cause is a single configuration change deployed 2 hours ago. Find it, fix it, verify all 3 services recover.",
-    "tools_available": ["terminal", "read_file", "patch", "process", "web_search"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch",
+      "process",
+      "web_search"
+    ],
     "environment": {
       "files": [
-        {"path": "/var/log/service-a/error.log", "description": "API gateway error logs"},
-        {"path": "/var/log/service-b/error.log", "description": "User service OOM logs"},
-        {"path": "/var/log/service-c/error.log", "description": "DB proxy connection logs"},
-        {"path": "/deploy/changelog.txt", "description": "Recent deployment changes"},
-        {"path": "/etc/service-c/pgbouncer.ini", "description": "Connection pool config (the root cause is here)"}
+        {
+          "path": "/var/log/service-a/error.log",
+          "description": "API gateway error logs"
+        },
+        {
+          "path": "/var/log/service-b/error.log",
+          "description": "User service OOM logs"
+        },
+        {
+          "path": "/var/log/service-c/error.log",
+          "description": "DB proxy connection logs"
+        },
+        {
+          "path": "/deploy/changelog.txt",
+          "description": "Recent deployment changes"
+        },
+        {
+          "path": "/etc/service-c/pgbouncer.ini",
+          "description": "Connection pool config (the root cause is here)"
+        }
       ],
       "services": [
-        {"name": "service-a", "port": 8080, "status": "degraded"},
-        {"name": "service-b", "port": 8081, "status": "restarting"},
-        {"name": "service-c", "port": 6432, "status": "overloaded"}
+        {
+          "name": "service-a",
+          "port": 8080,
+          "status": "degraded"
+        },
+        {
+          "name": "service-b",
+          "port": 8081,
+          "status": "restarting"
+        },
+        {
+          "name": "service-c",
+          "port": 6432,
+          "status": "overloaded"
+        }
       ],
       "preconditions": [
         "All 3 services were healthy until 2 hours ago",
@@ -251,7 +423,7 @@
       "Service A returning 200 on health check",
       "Agent traced the causality chain: C config → B OOM → A 502"
     ],
-    "par_steps": 24,
+    "par_steps": 24
   },
   {
     "id": "T009",
@@ -259,12 +431,25 @@
     "domain": "DevOps & Infrastructure",
     "difficulty": "Easy",
     "description": "Fix a broken docker-compose.yml that fails to start. There are 3 errors: a network misconfiguration, a volume mount pointing to a non-existent path, and a missing environment variable. Fix all 3 and get the stack running.",
-    "tools_available": ["terminal", "read_file", "patch"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch"
+    ],
     "environment": {
       "files": [
-        {"path": "/app/docker-compose.yml", "description": "Broken compose file"},
-        {"path": "/app/.env.example", "description": "Example environment variables"},
-        {"path": "/app/Dockerfile", "description": "App Dockerfile"}
+        {
+          "path": "/app/docker-compose.yml",
+          "description": "Broken compose file"
+        },
+        {
+          "path": "/app/.env.example",
+          "description": "Example environment variables"
+        },
+        {
+          "path": "/app/Dockerfile",
+          "description": "App Dockerfile"
+        }
       ],
       "services": [],
       "preconditions": [
@@ -280,7 +465,7 @@
       "docker-compose up runs all 3 services successfully",
       "docker-compose ps shows all healthy"
     ],
-    "par_steps": 8,
+    "par_steps": 8
   },
   {
     "id": "T010",
@@ -288,12 +473,25 @@
     "domain": "Security & Adversarial",
     "difficulty": "Extreme",
     "description": "Recover data from a GPG-encrypted backup archive. The archive header is corrupted (first 16 bytes zeroed). You must repair the header, decrypt with the provided passphrase, extract the contents, and verify integrity via SHA256 checksums.",
-    "tools_available": ["terminal", "read_file", "execute_code"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "execute_code"
+    ],
     "environment": {
       "files": [
-        {"path": "/backup/archive.gpg", "description": "Corrupted encrypted archive"},
-        {"path": "/backup/checksums.sha256", "description": "Expected checksums for recovered files"},
-        {"path": "/backup/gpg-header-reference.bin", "description": "Reference GPG header from a known-good archive"}
+        {
+          "path": "/backup/archive.gpg",
+          "description": "Corrupted encrypted archive"
+        },
+        {
+          "path": "/backup/checksums.sha256",
+          "description": "Expected checksums for recovered files"
+        },
+        {
+          "path": "/backup/gpg-header-reference.bin",
+          "description": "Reference GPG header from a known-good archive"
+        }
       ],
       "services": [],
       "preconditions": [
@@ -309,7 +507,7 @@
       "All 5 files extracted",
       "SHA256 checksums match for all files"
     ],
-    "par_steps": 12,
+    "par_steps": 12
   },
   {
     "id": "T011",
@@ -317,13 +515,29 @@
     "domain": "Software Engineering",
     "difficulty": "Easy",
     "description": "Resolve merge conflicts across 4 files when merging feature/payments into main. Both branches modified the same functions. The feature branch adds payment processing; main has refactored the same code for performance. Both changes must be preserved.",
-    "tools_available": ["terminal", "read_file", "patch"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch"
+    ],
     "environment": {
       "files": [
-        {"path": "/repo/src/api/orders.py", "description": "Order processing (conflicted)"},
-        {"path": "/repo/src/api/users.py", "description": "User model (conflicted)"},
-        {"path": "/repo/src/utils/validators.py", "description": "Input validation (conflicted)"},
-        {"path": "/repo/tests/test_orders.py", "description": "Test file (conflicted)"}
+        {
+          "path": "/repo/src/api/orders.py",
+          "description": "Order processing (conflicted)"
+        },
+        {
+          "path": "/repo/src/api/users.py",
+          "description": "User model (conflicted)"
+        },
+        {
+          "path": "/repo/src/utils/validators.py",
+          "description": "Input validation (conflicted)"
+        },
+        {
+          "path": "/repo/tests/test_orders.py",
+          "description": "Test file (conflicted)"
+        }
       ],
       "services": [],
       "preconditions": [
@@ -339,7 +553,7 @@
       "All tests pass after resolution",
       "Merge committed successfully"
     ],
-    "par_steps": 10,
+    "par_steps": 10
   },
   {
     "id": "T012",
@@ -347,11 +561,22 @@
     "domain": "System Administration",
     "difficulty": "Extreme",
     "description": "Write, compile, and load a custom Linux kernel module that creates a /proc/sysmetrics interface. The interface should report CPU count, total RAM, uptime, and load average in JSON format when read.",
-    "tools_available": ["terminal", "read_file", "patch", "execute_code"],
+    "tools_available": [
+      "terminal",
+      "read_file",
+      "patch",
+      "execute_code"
+    ],
     "environment": {
       "files": [
-        {"path": "/module/sysmetrics.c", "description": "Skeleton kernel module source"},
-        {"path": "/module/Makefile", "description": "Kernel module build file"}
+        {
+          "path": "/module/sysmetrics.c",
+          "description": "Skeleton kernel module source"
+        },
+        {
+          "path": "/module/Makefile",
+          "description": "Kernel module build file"
+        }
       ],
       "services": [],
       "preconditions": [
@@ -367,7 +592,7 @@
       "Output is valid JSON with cpu_count, ram_total_mb, uptime_seconds, load_avg fields",
       "Module unloads cleanly with rmmod"
     ],
-    "par_steps": 14,
+    "par_steps": 14
   },
   {
     "id": "T013",
@@ -375,13 +600,27 @@
     "domain": "Multi-step Reasoning",
     "difficulty": "Medium",
     "description": "Analyze 10 logical arguments and for each one: determine if the argument is valid or invalid, identify the specific type of logical fallacy (if any), provide step-by-step reasoning explaining the classification, and document verification methods used to validate the conclusion. Based on Item Response Theory (IRT) principles.",
-    "tools_available": ["read_file"],
+    "tools_available": [
+      "read_file"
+    ],
     "environment": {
       "files": [
-        {"path": "/problems/logical_arguments.txt", "description": "10 logical arguments to analyze"},
-        {"path": "/problems/scoring_rubric.md", "description": "7-dimensional qualitative evaluation framework"},
-        {"path": "/problems/expected_analysis.md", "description": "Reference answers with correct classifications"},
-        {"path": "/scoring/evaluate.py", "description": "Automated Python scoring script"}
+        {
+          "path": "/problems/logical_arguments.txt",
+          "description": "10 logical arguments to analyze"
+        },
+        {
+          "path": "/problems/scoring_rubric.md",
+          "description": "7-dimensional qualitative evaluation framework"
+        },
+        {
+          "path": "/problems/expected_analysis.md",
+          "description": "Reference answers with correct classifications"
+        },
+        {
+          "path": "/scoring/evaluate.py",
+          "description": "Automated Python scoring script"
+        }
       ],
       "services": [],
       "preconditions": [
