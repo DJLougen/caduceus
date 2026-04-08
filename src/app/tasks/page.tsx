@@ -103,12 +103,15 @@ export default function TasksPage() {
   const allTasks = useMemo(() => {
     const staticById = new Map(TASKS_DATA.map((t) => [t.id, t]));
     if (!liveTasks) return TASKS_DATA;
-    const merged = liveTasks.map((t) => ({
-      ...t,
-      source: t.source || staticById.get(t.id)?.source,
-    }));
+    // Only show API tasks that also exist in our static catalog (public tasks)
+    const merged = liveTasks
+      .filter((t) => staticById.has(t.id))
+      .map((t) => ({
+        ...t,
+        source: t.source || staticById.get(t.id)?.source,
+      }));
     // Add static tasks not in API (casual arena, etc.)
-    const liveIds = new Set(liveTasks.map((t) => t.id));
+    const liveIds = new Set(merged.map((t) => t.id));
     const extras = TASKS_DATA.filter((t) => !liveIds.has(t.id));
     return [...merged, ...extras];
   }, [liveTasks]);

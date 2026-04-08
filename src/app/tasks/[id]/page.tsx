@@ -38,7 +38,14 @@ const casualTasks: FullTask[] = CASUAL_ARENA.map((t) => ({
   source: undefined,
 }));
 
-const ALL_TASKS: FullTask[] = [...(tasksJson as FullTask[]), ...casualTasks];
+// Only generate pages for tasks with a source repo (public tasks) + casual arena
+const PUBLIC_TASK_IDS = new Set(
+  (tasksJson as FullTask[]).filter((t) => t.source).map((t) => t.id)
+);
+const ALL_TASKS: FullTask[] = [
+  ...(tasksJson as FullTask[]).filter((t) => PUBLIC_TASK_IDS.has(t.id)),
+  ...casualTasks,
+];
 
 export function generateStaticParams() {
   return ALL_TASKS.map((t) => ({ id: t.id }));
