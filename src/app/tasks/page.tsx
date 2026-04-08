@@ -95,6 +95,7 @@ function mapApiTask(t: Record<string, unknown>): TaskEntry {
     tools: (t.tools_available as string[]) || [],
     avgScore: (t.avg_score as number) || 0,
     totalRuns: (t.total_runs as number) || 0,
+    source: (t.source as string) || undefined,
   };
 }
 
@@ -111,7 +112,20 @@ export default function TasksPage() {
     });
   }, []);
 
-  const allTasks = liveTasks || TASKS_DATA;
+  // Merge: use live API tasks if available, but enrich with source URLs
+  // from static data and append any static-only tasks (e.g. Casual Arena)
+  const allTasks = useMemo(() => {
+    const staticById = new Map(TASKS_DATA.map((t) => [t.id, t]));
+    if (!liveTasks) return TASKS_DATA;
+    const merged = liveTasks.map((t) => ({
+      ...t,
+      source: t.source || staticById.get(t.id)?.source,
+    }));
+    // Add static tasks not in API (casual arena, etc.)
+    const liveIds = new Set(liveTasks.map((t) => t.id));
+    const extras = TASKS_DATA.filter((t) => !liveIds.has(t.id));
+    return [...merged, ...extras];
+  }, [liveTasks]);
 
   const filtered = useMemo(() => {
     return allTasks.filter((t) => {
