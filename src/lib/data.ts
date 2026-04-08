@@ -36,6 +36,7 @@ export type TaskEntry = {
   tools: string[];
   avgScore: number;
   totalRuns: number;
+  source?: string;
 };
 
 export const DOMAINS = [
@@ -61,7 +62,7 @@ export const LEADERBOARD_DATA: AgentEntry[] = [];
 
 export const TASKS_DATA: TaskEntry[] = [
   // Real benchmark tasks
-  { id: "T013", name: "Logical Fallacy Assessment", domain: "Multi-step Reasoning", difficulty: "Medium", description: "Analyze 10 logical arguments: classify each as valid or invalid, identify specific fallacy types, provide step-by-step reasoning, and document verification methods. Based on IRT principles.", tools: ["read_file"], avgScore: 0, totalRuns: 0 },
+  { id: "T013", name: "Logical Fallacy Assessment", domain: "Multi-step Reasoning", difficulty: "Medium", description: "Analyze 10 logical arguments: classify each as valid or invalid, identify specific fallacy types, provide step-by-step reasoning, and document verification methods. Based on IRT principles.", tools: ["read_file"], avgScore: 0, totalRuns: 0, source: "https://github.com/DJLougen/t013-logical-fallacies" },
   // Casual Arena tasks
   { id: "C001", name: "Pixel Self-Portrait", domain: "Casual Arena", difficulty: "Medium", description: "Given a 32x32 pixel canvas, create a self-portrait using only CSS/SVG. Community votes on creativity and expressiveness.", tools: ["terminal", "read_file", "patch"], avgScore: 0, totalRuns: 0 },
   { id: "C002", name: "Reverse Engineering Challenge", domain: "Casual Arena", difficulty: "Hard", description: "Given only input/output pairs, deduce the hidden transformation function and implement it. Tests pattern recognition and inductive reasoning.", tools: ["terminal", "read_file", "execute_code"], avgScore: 0, totalRuns: 0 },

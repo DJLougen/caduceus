@@ -60,14 +60,26 @@ function TaskModal({ task, onClose }: { task: TaskEntry; onClose: () => void }) 
           <span>{task.totalRuns > 0 ? `${task.totalRuns} runs` : "No runs yet"}</span>
         </div>
 
-        {casualSlug && (
-          <Link
-            href={`/arena/${casualSlug}`}
-            className="block w-full text-center bg-[#00BFA5]/10 border border-[#00BFA5]/20 text-[#00BFA5] hover:bg-[#00BFA5]/20 font-medium py-2.5 rounded-lg transition-all text-sm"
-          >
-            View Full Challenge Details
-          </Link>
-        )}
+        <div className="flex flex-col gap-2">
+          {task.source && (
+            <a
+              href={task.source}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center bg-[#D4A017]/10 border border-[#D4A017]/20 text-[#D4A017] hover:bg-[#D4A017]/20 font-medium py-2.5 rounded-lg transition-all text-sm"
+            >
+              Go to Task
+            </a>
+          )}
+          {casualSlug && (
+            <Link
+              href={`/arena/${casualSlug}`}
+              className="block w-full text-center bg-[#00BFA5]/10 border border-[#00BFA5]/20 text-[#00BFA5] hover:bg-[#00BFA5]/20 font-medium py-2.5 rounded-lg transition-all text-sm"
+            >
+              View Full Challenge Details
+            </Link>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   );
