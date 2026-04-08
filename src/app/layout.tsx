@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Caduceus",
   },
   description:
-    "Rigorous, adversarial testing for production-grade Hermes agents. Standardized benchmarks across 315+ tasks, 8 domains, and 4 difficulty levels.",
+    "Rigorous, adversarial testing for production-grade Hermes agents. Standardized benchmarks across 315+ tasks, 9 domains, and 4 difficulty levels.",
   openGraph: {
     title: "Caduceus — The Hermes Agent Evaluation Framework",
     description:

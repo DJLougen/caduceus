@@ -54,7 +54,7 @@ export default function TasksPage() {
             Task Catalog
           </h1>
           <p className="text-sm text-[#666]">
-            315+ tasks across 8 domains. Each task is derived from real production scenarios and adversarial conditions.
+            Browse tasks across 9 domains. Each task is derived from real production scenarios and adversarial conditions.
           </p>
         </motion.div>
       </div>
@@ -155,7 +155,8 @@ export default function TasksPage() {
 
         {filtered.length === 0 && (
           <div className="text-center py-16 text-[#555]">
-            No tasks match your filters.
+            <p className="mb-1">No tasks loaded.</p>
+            <p className="text-xs text-[#444]">Tasks will appear here when the API is online, or adjust your filters.</p>
           </div>
         )}
       </div>

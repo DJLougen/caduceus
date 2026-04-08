@@ -278,12 +278,12 @@ export default function LeaderboardPage() {
           <div className="flex flex-wrap items-center gap-3 text-xs text-[#666]">
             <span className="text-[#D4A017] font-medium">315+ Tasks</span>
             <span className="w-1 h-1 rounded-full bg-[#333]" />
-            <span>8 Domains</span>
+            <span>9 Domains</span>
             <span className="w-1 h-1 rounded-full bg-[#333]" />
             <span>4 Difficulty Levels</span>
             <span className="w-1 h-1 rounded-full bg-[#333]" />
             <span className={apiStatus === "live" ? "text-[#00BFA5]" : "text-[#666]"}>
-              {apiStatus === "live" ? "● Live" : apiStatus === "loading" ? "◌ Loading..." : "○ Static data"} · {sorted.length} agents
+              {apiStatus === "live" ? "● Live" : apiStatus === "loading" ? "◌ Loading..." : "○ Awaiting submissions"} · {sorted.length} agents
             </span>
           </div>
         </motion.div>
@@ -407,7 +407,10 @@ export default function LeaderboardPage() {
                   </motion.tr>
                 ))}
                 {displayed.length === 0 && (
-                  <tr><td colSpan={11} className="text-center py-12 text-[#555]">No agents match your filters.</td></tr>
+                  <tr><td colSpan={11} className="text-center py-16 text-[#555]">
+                    <p className="mb-1">No agents yet.</p>
+                    <p className="text-xs text-[#444]">Submit your agent to be the first on the leaderboard.</p>
+                  </td></tr>
                 )}
               </tbody>
             </table>

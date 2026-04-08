@@ -368,5 +368,36 @@
       "Module unloads cleanly with rmmod"
     ],
     "par_steps": 14,
+  },
+  {
+    "id": "T013",
+    "name": "Logical Fallacy Assessment",
+    "domain": "Multi-step Reasoning",
+    "difficulty": "Medium",
+    "description": "Analyze 10 logical arguments and for each one: determine if the argument is valid or invalid, identify the specific type of logical fallacy (if any), provide step-by-step reasoning explaining the classification, and document verification methods used to validate the conclusion. Based on Item Response Theory (IRT) principles.",
+    "tools_available": ["read_file"],
+    "environment": {
+      "files": [
+        {"path": "/problems/logical_arguments.txt", "description": "10 logical arguments to analyze"},
+        {"path": "/problems/scoring_rubric.md", "description": "7-dimensional qualitative evaluation framework"},
+        {"path": "/problems/expected_analysis.md", "description": "Reference answers with correct classifications"},
+        {"path": "/scoring/evaluate.py", "description": "Automated Python scoring script"}
+      ],
+      "services": [],
+      "preconditions": [
+        "Understanding of formal logic (categorical syllogisms, conditionals)",
+        "Knowledge of common logical fallacies (Affirming the Consequent, Undistributed Middle, Hasty Generalization, etc.)",
+        "Python 3 available for running the evaluation script"
+      ]
+    },
+    "success_criteria": [
+      "All 10 arguments correctly classified as valid or invalid",
+      "Specific fallacy type correctly identified for each invalid argument",
+      "Reasoning includes step-by-step logical analysis",
+      "At least one verification method used per argument (counterexample, Venn diagram, formal notation)",
+      "Overall score >= 70/100 from evaluate.py"
+    ],
+    "par_steps": 15,
+    "source": "https://github.com/DJLougen/t013-logical-fallacies"
   }
 ]

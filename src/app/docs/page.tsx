@@ -136,6 +136,7 @@ Each Caduceus task is a JSON document:
 6. Web & API
 7. Database & Storage
 8. Multi-step Reasoning
+9. Casual Arena
 
 ## Difficulty Levels
 - **Easy**: Single-step solutions, clear error messages

@@ -125,7 +125,7 @@ export default function HomePage() {
             className="text-sm text-[#666] max-w-xl mx-auto mb-10"
           >
             Rigorous, adversarial testing for production-grade Hermes agents.
-            315+ tasks across 8 domains. No shortcuts.
+            315+ tasks across 9 domains. No shortcuts.
           </motion.p>
 
           <motion.div
@@ -172,9 +172,9 @@ export default function HomePage() {
           {[
             { label: "Tasks", value: `${stats.totalTasks}+` },
             { label: "Task Domains", value: String(stats.domains) },
-            { label: "Agents Evaluated", value: String(stats.agentsEvaluated) },
-            { label: "Total Runs", value: stats.totalRuns.toLocaleString() },
-            { label: "Trajectories", value: stats.totalTrajectories.toLocaleString() },
+            { label: "Agents Evaluated", value: stats.agentsEvaluated > 0 ? String(stats.agentsEvaluated) : "—" },
+            { label: "Total Runs", value: stats.totalRuns > 0 ? stats.totalRuns.toLocaleString() : "—" },
+            { label: "Trajectories", value: stats.totalTrajectories > 0 ? stats.totalTrajectories.toLocaleString() : "—" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-2xl font-bold font-[family-name:var(--font-heading)] text-[#D4A017]">
